@@ -9,6 +9,7 @@ exec 1>log.out 2>&1
 cd ~/work/attachments_playlists
 R -f init.R
 
+mkdir data
 mkdir data/temp
 mkdir output
 # Access to files created by this script
