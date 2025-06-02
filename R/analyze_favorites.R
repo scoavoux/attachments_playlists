@@ -44,9 +44,9 @@ plot_like_at_first_sight <- function(favorites_replayed, .what = c("raw", "by_de
   .what = .what[1]
   favorites_replayed <- favorites_replayed %>% 
     filter(!is.na(nlisten_at_clicked_love)) %>% 
-    filter(nlisten_at_clicked_love < 500,
-           context_at_discovery %in% c("edito", "organic", "reco_algo")) %>% 
-    mutate(context_at_discovery = recode_device(context_at_discovery))
+    mutate(nlisten_at_clicked_love = ifelse(nlisten_at_clicked_love > 500, 500, nlisten_at_clicked_love)) %>% 
+    filter(context_at_discovery %in% c("edito", "organic", "reco_algo")) %>% 
+    mutate(context_at_discovery2 = recode_device(context_at_discovery))
   if(.what == "raw"){
     gg <- favorites_replayed %>% 
       ggplot(aes(nlisten_at_clicked_love)) +
@@ -55,12 +55,12 @@ plot_like_at_first_sight <- function(favorites_replayed, .what = c("raw", "by_de
         labs(x = "No. play before clicked like button", y = "")
   } else if(.what == "by_device"){
     gg <- favorites_replayed %>% 
-      count(context_at_discovery, nlisten_at_clicked_love) %>% 
-      group_by(context_at_discovery) %>% 
+      count(context_at_discovery2, nlisten_at_clicked_love) %>% 
+      group_by(context_at_discovery2) %>% 
       mutate(f = n / sum(n)) %>% 
       ungroup() %>% 
       filter(nlisten_at_clicked_love < 11) %>% 
-      ggplot(aes(nlisten_at_clicked_love, f, fill = context_at_discovery)) +
+      ggplot(aes(nlisten_at_clicked_love, f, fill = context_at_discovery2)) +
         geom_col(position = "dodge") +
         labs(x = "No. play before clicked like button", y = "", fill = "Context of first play") +
         scale_x_continuous(breaks = 1:10)
@@ -68,4 +68,29 @@ plot_like_at_first_sight <- function(favorites_replayed, .what = c("raw", "by_de
   filename <- str_glue("output/like_at_first_sight_{.what}.png")
   ggsave(filename, gg)
   return(filename)
+}
+
+plot_replay_after_loved <- function(favorites_replayed){
+  set_ggplot_options()
+  favorites_replayed <- favorites_replayed %>% 
+    filter(context_at_discovery %in% c("edito", "organic", "reco_algo")) %>% 
+    mutate(nlisten_after_discovery = ifelse(nlisten_after_discovery > 500, 500, nlisten_after_discovery),
+           liked = case_when(is.na(nlisten_at_clicked_love) ~ "Never",
+                             nlisten_at_clicked_love == 1 ~ "At first sight",
+                             nlisten_at_clicked_love > 1 ~ "Later"),
+           context_at_discovery2 = recode_device(context_at_discovery))
+  d <- favorites_replayed %>% 
+    count(context_at_discovery2, liked, nlisten_after_discovery) %>% 
+    group_by(context_at_discovery2, liked) %>% 
+    mutate(f = n/sum(n))
+  gg <- d %>% 
+    filter(nlisten_after_discovery < 30) %>% 
+    ggplot(aes(nlisten_after_discovery, f)) +
+      geom_col() +
+      facet_grid(liked ~ context_at_discovery2, scale="free_y")
+  
+  filename <- str_glue("output/replay_after_loved.png")
+  ggsave(filename, gg)
+  return(filename)
+  
 }

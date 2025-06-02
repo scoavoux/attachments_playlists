@@ -36,6 +36,9 @@ list(
              repository = "local", format = "file"),
   tar_target(gg_like_at_first_sight_bydevice,   plot_like_at_first_sight(favorites_replayed, .what = "by_device"),
              repository = "local", format = "file"),
+  tar_target(gg_replay_after_loved, plot_replay_after_loved(favorites_replayed),
+             repository = "local", format = "file"),
+  
   
   # Playlist use ------
   tar_target(users_playlists,              make_users_playlists_data(users, playlists, isei)),
