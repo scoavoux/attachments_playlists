@@ -20,6 +20,7 @@ tar_source("R")
 list(
   # Data ------
   tar_target(users,                make_survey_data()),
+  tar_target(isei,                 make_isei_data(users)),
   tar_target(playlists,            make_playlist_data(users = users)),
   tar_target(unique_titles,        make_playlists_unique_titles(playlists = playlists), format = "file", repository = "local"),
   tar_target(tracklists,           make_tracklist_data(playlists = playlists)),
