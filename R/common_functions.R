@@ -13,3 +13,11 @@ initialize_s3 <- function(){
   
   return(s3)
 }
+
+set_ggplot_options <- function(){
+  theme_set(theme_minimal(base_size = 13))
+}
+
+recode_device <- function(x){
+  factor(x, levels = c("organic", "edito", "reco_algo"), labels = c("Organic", "Editorial", "Algorithmic recommendation"))
+}

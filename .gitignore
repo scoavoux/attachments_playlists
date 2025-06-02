@@ -1,5 +1,6 @@
 # Target
 _targets/
+output/
 
 # History files
 .Rhistory

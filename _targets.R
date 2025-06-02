@@ -31,5 +31,8 @@ list(
   tar_target(streaming_data,       make_stream_data_onefile(streaming_data_files, users), pattern = streaming_data_files),
   
   # Like at first sight ------
-  tar_target(favorites_replayed,   make_favorites_replayed_data(streaming_data))
+  tar_target(favorites_replayed,   make_favorites_replayed_data(streaming_data)),
+  tar_target(gg_like_at_first_sight_raw,   plot_like_at_first_sight(favorites_replayed, .what = "raw")),
+  tar_target(gg_like_at_first_sight_bydevice,   plot_like_at_first_sight(favorites_replayed, .what = "by_device"))
+  
 )
