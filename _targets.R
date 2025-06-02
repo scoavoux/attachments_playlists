@@ -32,7 +32,14 @@ list(
   
   # Like at first sight ------
   tar_target(favorites_replayed,   make_favorites_replayed_data(streaming_data)),
-  tar_target(gg_like_at_first_sight_raw,   plot_like_at_first_sight(favorites_replayed, .what = "raw")),
-  tar_target(gg_like_at_first_sight_bydevice,   plot_like_at_first_sight(favorites_replayed, .what = "by_device"))
+  tar_target(gg_like_at_first_sight_raw,   plot_like_at_first_sight(favorites_replayed, .what = "raw"), 
+             repository = "local", format = "file"),
+  tar_target(gg_like_at_first_sight_bydevice,   plot_like_at_first_sight(favorites_replayed, .what = "by_device"),
+             repository = "local", format = "file"),
   
+  # Playlist use ------
+  tar_target(users_playlists,              make_users_playlists_data(users, playlists, isei)),
+  tar_target(gg_noplaylists_socdem,        plot_noplaylists_socdem(users_playlists), 
+                                           repository = "local", format = "file")
+
 )

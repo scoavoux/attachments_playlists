@@ -1,38 +1,61 @@
-# make table of NO of playlist by gender, education level, etc.
-function(users, playlists, isei){
+make_users_playlists_data <- function(users, playlists, isei){
   d <- users %>% 
     select(hashed_id, E_gender, E_birth_year, E_diploma) %>% 
     left_join(isei) %>% 
-    left_join(count(playlists, hashed_id, name = "n_playlists"))
-  d <- d %>% 
-    mutate(gender = factor(E_gender, levels = c("Un homme", "Une femme")),
+    mutate(gender = factor(E_gender, 
+                           levels = c("Un homme", "Une femme"),
+                           labels = c("Men", "Women")),
            degree = ifelse(E_diploma == "", NA, E_diploma) %>% 
              factor() %>% 
-             fct_collapse(less_highschool = c("Aucun diplôme",
+             fct_collapse(`No high school` = c("Aucun diplôme",
                                               "CEP (certificat d'études primaires)", 
                                               "BEPC, brevet élementaire, brevet des collèges",
                                               "CAP, BEP, brevet de compagnon"),
-                          highschool = c("Bac général, brevet supérieur", 
+                          `High school` = c("Bac général, brevet supérieur", 
                                          "Bac pro ou techno, brevet professionnel ou de technicien, BEA, BEC, BEI, BEH, capacité en droit"),
-                          highered_short = c(
+                          `College` = c(
                             "DEUG, BTS, DUT, DEUST, diplôme des professions sociales ou de la santé, d'infirmier.ère", 
                             "Licence, licence pro, maîtrise, BUT"), 
-                          highered_long = c(
+                          `Graduate` = c(
                             "Master, diplôme d'ingénieur.e, DEA, DESS", 
                             "Doctorat (y compris médecine, pharmacie, dentaire), HDR")
              ),
            age = 2023-E_birth_year,
-           age_cat = cut(2023-E_birth_year, breaks = c(0, 25, 35, 45, 55, 100)),
-           isei_quartile = cut(isei, breaks = c(0, quantile(isei, seq(.25, .75, .25), na.rm=TRUE), 100)))
-  ggplot(d, aes(n_playlists)) +
-    geom_histogram() +
-    scale_x_log10()
-  d %>% 
-    mutate(np = cut(n_playlists, c(0, 1, 2, 3, 5, 10, 20, 50, 100, 5000))) %>% 
-    janitor::tabyl(np, E_diploma) %>% 
-    adorn_percentages()
-  lm(log(n_playlists)~E_gender + age + isei, d) %>% 
-    summary()
+           age_cat = cut(2023-E_birth_year, 
+                         breaks = c(0, 25, 35, 45, 55, 100), 
+                         labels = c("24-", "25-34", "35-44", "45-54", "55+")),
+           isei_quartile = cut(isei, 
+                               breaks = c(0, quantile(isei, seq(.25, .75, .25), na.rm=TRUE), 100),
+                               labels = paste0("Q", 1:4)))
+  
+  playlists <- playlists %>% 
+    filter(!(title %in% c("Loved tracks", "Loved Tracks", "Coups de cœur")))
+  np <-  count(playlists, hashed_id, name = "n_playlists")
+  d <- d %>% 
+    left_join(np) %>% 
+    mutate(n_playlists = ifelse(is.na(n_playlists), 0, n_playlists))
+  return(d)
+}
+
+# make table of NO of playlist by gender, education level, etc.
+plot_noplaylists_socdem <- function(users_playlists){
+  set_ggplot_options()
+  d <- users_playlists %>% 
+    select(n_playlists, gender, age_cat, isei_quartile, degree) %>% 
+    pivot_longer(-n_playlists) %>% 
+    filter(!is.na(value)) %>% 
+    filter(n_playlists < 50) %>% 
+    mutate(name = factor(name, levels = c("age_cat", "degree", "gender", "isei_quartile"),
+                         labels = c("Age class", "Degree", "Gender", "ISEI")))
+  gg <- d %>% 
+     ggplot(aes(n_playlists, value)) +
+       ggridges::geom_density_ridges() +
+       facet_wrap(~name, scales = "free_y") +
+       labs(x = "No. of playlists", y = "")
+  filename <- str_glue("output/noplaylists_socdem.png")
+  ggsave(filename, gg)
+  return(filename)
+  
 }
   #tar_load(c(users, playlists, isei))
 
