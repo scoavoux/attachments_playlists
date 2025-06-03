@@ -342,3 +342,35 @@ make_stream_data_onefile <- function(file, users){
   return(streams)
 }
 
+list_playlists_annotation_data_files <- function(){
+  s3 <- initialize_s3()
+  files <- s3$list_objects_v2(Bucket = "scoavoux", Prefix = "records_w3/playlists_annotations")$Content %>% map(~.x$Key) %>% 
+    unlist()
+  files <- files[!str_detect(files, "\\.keep")]
+  return(files)
+}
+
+make_playlists_annotation_data <- function(playlists_annotation_data_files, playlists){
+  s3 <- initialize_s3()
+  
+  r <- vector("list", length = length(playlists_annotation_data_files))
+  names(r) <- playlists_annotation_data_files
+  for(f in playlists_annotation_data_files){
+    r[[f]] <- s3$get_object(Bucket = "scoavoux", 
+                            Key = f)$Body %>% 
+      rawToChar() %>% 
+      data.table::fread() %>% 
+      tibble()
+  }
+  for(f in r){
+    if(!exists("o")) {
+      o <- f
+    } else {
+      o <- o %>% left_join(f)
+    }
+  }
+  o <- slice(o, 1, .by = "title") %>% 
+    rename_with(~paste0("an_", .x), -title)
+  playlists <- left_join(playlists, o)
+  return(playlists)
+}

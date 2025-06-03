@@ -31,8 +31,16 @@ make_users_playlists_data <- function(users, playlists, isei){
   playlists <- playlists %>% 
     filter(!(title %in% c("Loved tracks", "Loved Tracks", "Coups de cœur")))
   np <-  count(playlists, hashed_id, name = "n_playlists")
+  ap <- playlists %>% 
+    select(-playlist_id, -title) %>% 
+    pivot_longer(-hashed_id) %>% 
+    filter(!is.na(value)) %>% 
+    group_by(hashed_id, name) %>% 
+    summarize(n = sum(value)) %>% 
+    pivot_wider(names_from = name, values_from = n, values_fill = 0)
   d <- d %>% 
-    left_join(np) %>% 
+    left_join(np) %>%
+    left_join(ap) %>% 
     mutate(n_playlists = ifelse(is.na(n_playlists), 0, n_playlists))
   return(d)
 }

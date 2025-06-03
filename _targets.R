@@ -18,13 +18,17 @@ tar_option_set(
 tar_source("R")
 
 list(
-  # Data ------
+  # User data ------
   tar_target(users,                make_survey_data()),
   tar_target(isei,                 make_isei_data(users)),
-  tar_target(playlists,            make_playlist_data(users = users)),
-  tar_target(unique_titles,        make_playlists_unique_titles(playlists = playlists), format = "file", repository = "local"),
-  tar_target(tracklists,           make_tracklist_data(playlists = playlists)),
   tar_target(favorites,            make_favorites_data(users = users)),
+  
+  # Playlists data
+  tar_target(playlists_raw,        make_playlist_data(users = users)),
+  tar_target(unique_titles,        make_playlists_unique_titles(playlists = playlists_raw), format = "file", repository = "local"),
+  tar_target(tracklists,           make_tracklist_data(playlists = playlists_raw)),
+  tar_target(playlists_annotation_data_files, list_playlists_annotation_data_files(), format = "qs"),
+  tar_target(playlists,            make_playlists_annotation_data(playlists_annotation_data_files, playlists_raw)),
   
   ## Streaming data ------
   tar_target(streaming_data_files, list_streaming_data_files(), format = "rds"),
