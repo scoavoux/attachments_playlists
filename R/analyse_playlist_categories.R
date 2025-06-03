@@ -35,8 +35,9 @@ plot_pl_annotations <- function(users_playlists){
 
 plot_pl_annotations_bysocdem <- function(users_playlists){
   set_ggplot_options()
+  gg <- ggplot()
   filename <- str_glue("output/playlist_annotations_by_socdem.png")
-  #ggsave(filename, gg)
+  ggsave(filename, gg)
   return(filename)
   
 }
