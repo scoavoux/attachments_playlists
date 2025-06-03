@@ -77,7 +77,8 @@ plot_replay_after_loved <- function(favorites_replayed){
     mutate(nlisten_after_discovery = ifelse(nlisten_after_discovery > 500, 500, nlisten_after_discovery),
            liked = case_when(is.na(nlisten_at_clicked_love) ~ "Never",
                              nlisten_at_clicked_love == 1 ~ "At first sight",
-                             nlisten_at_clicked_love > 1 ~ "Later"),
+                             nlisten_at_clicked_love > 1 ~ "Later") %>% 
+             factor(levels = c("Never", "At first sight", "Later")),
            context_at_discovery2 = recode_device(context_at_discovery))
   d <- favorites_replayed %>% 
     count(context_at_discovery2, liked, nlisten_after_discovery) %>% 
@@ -87,7 +88,9 @@ plot_replay_after_loved <- function(favorites_replayed){
     filter(nlisten_after_discovery < 30) %>% 
     ggplot(aes(nlisten_after_discovery, f)) +
       geom_col() +
-      facet_grid(liked ~ context_at_discovery2, scale="free_y")
+      facet_grid(liked ~ context_at_discovery2, scale="free_y", switch = "y") +
+      labs(x = "Total number of play", y = "Liked...") +
+      theme()
   
   filename <- str_glue("output/replay_after_loved.png")
   ggsave(filename, gg)
