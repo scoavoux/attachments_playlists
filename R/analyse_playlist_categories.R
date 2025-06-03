@@ -14,9 +14,10 @@ recode_playlists_annotations <- function(x){
   
 }
 
-plot_descriptive_ <- function(users_playlists){
+plot_pl_annotations <- function(users_playlists){
   set_ggplot_options()
-  users_playlists %>% 
+  #todo: ridges?
+  gg <- users_playlists %>% 
     select(hashed_id, starts_with("an_")) %>% 
     pivot_longer(-hashed_id) %>% 
     mutate(name = str_remove(name, "^an_"),
@@ -27,4 +28,15 @@ plot_descriptive_ <- function(users_playlists){
      geom_col() +
      facet_wrap(~cat, nrow=3, scales = "free_y") +
      labs(x = "Average number of playlists")
+  filename <- str_glue("output/playlist_annotations.png")
+  ggsave(filename, gg)
+  return(filename)
+}
+
+plot_pl_annotations_bysocdem <- function(users_playlists){
+  set_ggplot_options()
+  filename <- str_glue("output/playlist_annotations_by_socdem.png")
+  #ggsave(filename, gg)
+  return(filename)
+  
 }
