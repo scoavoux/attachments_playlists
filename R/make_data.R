@@ -13,6 +13,7 @@ make_survey_data <- function(){
   return(survey)
 }
 
+# this is from onmivore project.
 make_isei_data <- function(survey_raw){
   # Packages and data ------
   require(tidyverse)
