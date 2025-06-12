@@ -45,6 +45,23 @@ make_users_playlists_data <- function(users, playlists, isei){
   return(d)
 }
 
+plot_noplaylists <- function(users_playlists){
+  set_ggplot_options()
+  d <- users_playlists %>% 
+    select(n_playlists) %>% 
+    filter(!is.na(n_playlists)) %>% 
+    filter(n_playlists < 50)
+  count(d, n_playlists)
+  gg <- d %>% 
+    ggplot(aes(n_playlists)) +
+      geom_density() +
+      labs(x = "No. of playlists", y = "")
+  filename <- str_glue("output/noplaylists.png")
+  ggsave(filename, gg)
+  return(filename)
+  
+}
+
 # make table of NO of playlist by gender, education level, etc.
 plot_noplaylists_socdem <- function(users_playlists){
   set_ggplot_options()
