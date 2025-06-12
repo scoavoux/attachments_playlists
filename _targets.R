@@ -39,6 +39,8 @@ list(
   tar_target(favorites_replayed,   make_favorites_replayed_data(streaming_data)),
   tar_target(gg_ltfsight,          plot_like_at_first_sight(favorites_replayed, .what = "raw"), 
              repository = "local", format = "file"),
+  tar_target(gg_ltfsight_zoomed,   plot_like_at_first_sight(favorites_replayed, .what = "raw", .zoomed = TRUE), 
+             repository = "local", format = "file"),
   tar_target(gg_ltfsight_dev,      plot_like_at_first_sight(favorites_replayed, .what = "by_device"),
              repository = "local", format = "file"),
   tar_target(gg_replay_aft_loved,  plot_replay_after_loved(favorites_replayed),
