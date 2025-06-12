@@ -27,7 +27,8 @@ list(
   tar_target(playlists_raw,        make_playlist_data(users = users)),
   tar_target(unique_titles,        make_playlists_unique_titles(playlists = playlists_raw), format = "file", repository = "local"),
   tar_target(tracklists,           make_tracklist_data(playlists = playlists_raw)),
-  tar_target(playlists_annotation_data_files, list_playlists_annotation_data_files(), format = "qs"),
+  # This is a workaround to force listing of s3 files. Not great.
+  tar_force(playlists_annotation_data_files, list_playlists_annotation_data_files(), TRUE, format = "qs"),
   tar_target(playlists,            make_playlists_annotation_data(playlists_annotation_data_files, playlists_raw)),
   
   ## Streaming data ------
@@ -53,7 +54,10 @@ list(
   tar_target(gg_pl_annotations,     plot_pl_annotations(users_playlists),
                                     repository = "local", format = "file"),
   tar_target(gg_pl_ann_socdem,      plot_pl_annotations_bysocdem(users_playlists),
-                                    repository = "local", format = "file")
+                                    repository = "local", format = "file"),
   
+  # Supplementary analysis ------
+  tar_target(tbl_supp_desc,         table_descriptive_stats(playlists, users),
+                                    repository = "local", format = "file")
 
 )
