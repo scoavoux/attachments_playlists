@@ -50,7 +50,7 @@ list(
   # Playlist use ------
   tar_target(users_playlists,       make_users_playlists_data(users, playlists, isei)),
   tar_target(gg_noplaylists,        plot_noplaylists(users_playlists), 
-                                    repository = "local", format = "file")
+                                    repository = "local", format = "file"),
   tar_target(gg_noplaylists_socdem, plot_noplaylists_socdem(users_playlists), 
                                            repository = "local", format = "file"),
   
