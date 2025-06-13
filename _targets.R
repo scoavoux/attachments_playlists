@@ -22,6 +22,7 @@ list(
   tar_target(users,                make_survey_data()),
   tar_target(isei,                 make_isei_data(users)),
   tar_target(favorites,            make_favorites_data(users = users)),
+  tar_target(volume_play,          make_volume_play_data()),
   
   # Playlists data
   tar_target(playlists_raw,        make_playlist_data(users = users)),
@@ -48,12 +49,14 @@ list(
   
   
   # Playlist use ------
-  tar_target(users_playlists,       make_users_playlists_data(users, playlists, isei)),
+  tar_target(users_playlists,       make_users_playlists_data(users, playlists, isei, volume_play)),
   tar_target(gg_noplaylists,        plot_noplaylists(users_playlists), 
                                     repository = "local", format = "file"),
   tar_target(gg_nopl_socdem_ridge,  plot_noplaylists_socdem(users_playlists), 
                                     repository = "local", format = "file"),
   tar_target(gg_nopl_socdem_boxpl,  plot_noplaylists_socdem(users_playlists, .type = "boxplot"), 
+                                    repository = "local", format = "file"),
+  tar_target(gg_nopl_poisson,       plot_noplaylists_poisson_model(users_playlists),
                                     repository = "local", format = "file"),
   
   # Playlists cat ------

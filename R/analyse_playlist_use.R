@@ -1,4 +1,4 @@
-make_users_playlists_data <- function(users, playlists, isei){
+make_users_playlists_data <- function(users, playlists, isei, volume_play){
   d <- users %>% 
     select(hashed_id, E_gender, E_birth_year, E_diploma) %>% 
     left_join(isei) %>% 
@@ -41,6 +41,7 @@ make_users_playlists_data <- function(users, playlists, isei){
   d <- d %>% 
     left_join(np) %>%
     left_join(ap) %>% 
+    left_join(volume_play) %>% 
     mutate(n_playlists = ifelse(is.na(n_playlists), 0, n_playlists))
   return(d)
 }
@@ -90,6 +91,16 @@ plot_noplaylists_socdem <- function(users_playlists, .type = c("ridge", "boxplot
   ggsave(filename, gg)
   return(filename)
   
+}
+
+plot_noplaylists_poisson <- function(users_playlists){
+  library(modelsummary)
+  mod_full <- glm(n_playlists ~ gender + age + isei + degree  + log(n_play_2023), family = "poisson", data = users_playlists)
+  gg <- modelplot(mod_full, coef_omit = "(Intercept)", 
+            coef_rename = rev(c("Log vol. play", "Graduate education", "College education", "High school education", "ISEI", "Age in years", "Woman")))
+  filename <- str_glue("output/no_playlist_poisson_reg.png")
+  ggsave(filename, gg)
+  return(filename)
 }
 
   

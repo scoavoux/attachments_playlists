@@ -13,6 +13,25 @@ make_survey_data <- function(){
   return(survey)
 }
 
+make_volume_play_data <- function(){
+  library(aws.s3)
+  
+  # import short streams
+  data_cloud <- arrow::open_dataset(
+    source =   arrow::s3_bucket(
+      "scoavoux",
+      endpoint_override = "minio.lab.sspcloud.fr"
+    )$path("records_w3/streams/streams_short"),
+    partitioning = arrow::schema(REGION = arrow::utf8())
+  )
+  query <- data_cloud %>% 
+    select(hashed_id, is_listened, media_type) %>% 
+    filter(media_type == "song", is_listened == 1) %>% 
+    count(hashed_id, name = "n_play_2023")
+  short_stream <- collect(query)  
+  return(short_stream)
+}
+
 # this is from onmivore project.
 make_isei_data <- function(survey_raw){
   # Packages and data ------
