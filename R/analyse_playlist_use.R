@@ -63,7 +63,7 @@ plot_noplaylists <- function(users_playlists){
 }
 
 # make table of NO of playlist by gender, education level, etc.
-plot_noplaylists_socdem <- function(users_playlists){
+plot_noplaylists_socdem <- function(users_playlists, .type = c("ridge", "boxplot")){
   set_ggplot_options()
   d <- users_playlists %>% 
     select(n_playlists, gender, age_cat, isei_quartile, degree) %>% 
@@ -72,16 +72,24 @@ plot_noplaylists_socdem <- function(users_playlists){
     filter(n_playlists < 50) %>% 
     mutate(name = factor(name, levels = c("age_cat", "degree", "gender", "isei_quartile"),
                          labels = c("Age class", "Degree", "Gender", "ISEI")))
-  gg <- d %>% 
-     ggplot(aes(n_playlists, value)) +
-       ggridges::geom_density_ridges() +
-       facet_wrap(~name, scales = "free_y") +
-       labs(x = "No. of playlists", y = "")
-  filename <- str_glue("output/noplaylists_socdem.png")
+  .type = .type[1]
+  if(.type == "ridge"){
+    gg <- d %>% 
+      ggplot(aes(n_playlists, value)) +
+        ggridges::geom_density_ridges() +
+        facet_wrap(~name, scales = "free_y") +
+        labs(x = "No. of playlists", y = "")
+  } else if(.type == "boxplot"){
+    gg <- d %>% 
+      ggplot(aes(n_playlists, value)) +
+        geom_boxplot() +
+        facet_wrap(~name, scales = "free_y") +
+        labs(x = "No. of playlists", y = "")
+  }
+  filename <- str_glue("output/noplaylists_socdem_{.type}.png")
   ggsave(filename, gg)
   return(filename)
   
 }
-  #tar_load(c(users, playlists, isei))
 
   
