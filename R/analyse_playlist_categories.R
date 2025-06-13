@@ -5,7 +5,7 @@ recode_playlists <- function(x, .what){
              artiste = "Music-centered",
              contexte = "Context-centered",
              personne = "Context-centered",
-             events = "Context-centered",
+             evenement = "Context-centered",
              mood = "User-centered",
              top = "User-centered",
              moment = "User-centered")[x]
@@ -16,7 +16,7 @@ recode_playlists <- function(x, .what){
                                 "artiste", 
                                 "contexte", 
                                 "personne", 
-                                "events", 
+                                "evenement", 
                                 "mood", 
                                 "top", 
                                 "moment"),
@@ -78,8 +78,9 @@ plot_pl_annotations_bysocdem <- function(users_playlists){
   gg <- d %>% 
     ggplot(aes(m, socdem_value, fill = category)) +
       geom_col() +
-      facet_grid(socdem~large_cat, scale = "free_y") +
-      labs(x = "Average share of playlists", y = "", fill = "")
+      facet_grid(socdem~large_cat, scale = "free_y", space = "free_y") +
+      labs(x = "Average share of playlists", y = "", fill = "") +
+      scale_fill_brewer(palette = "Set1")
 
   filename <- str_glue("output/playlist_annotations_by_socdem.png")
   ggsave(filename, gg)
