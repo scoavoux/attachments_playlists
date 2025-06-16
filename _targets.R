@@ -56,7 +56,7 @@ list(
                                     repository = "local", format = "file"),
   tar_target(gg_nopl_socdem_boxpl,  plot_noplaylists_socdem(users_playlists, .type = "boxplot"), 
                                     repository = "local", format = "file"),
-  tar_target(gg_nopl_poisson,       plot_noplaylists_poisson_model(users_playlists),
+  tar_target(gg_nopl_poisson,       plot_noplaylists_poisson(users_playlists),
                                     repository = "local", format = "file"),
   
   # Playlists cat ------
@@ -64,6 +64,9 @@ list(
                                     repository = "local", format = "file"),
   tar_target(gg_pl_ann_socdem,      plot_pl_annotations_bysocdem(users_playlists),
                                     repository = "local", format = "file"),
+  tar_target(gg_typepl_poisson,     plot_typeplaylists_poisson(users_playlists),
+                                    repository = "local", format = "file"),
+  
   
   # Supplementary analysis ------
   tar_target(tbl_supp_desc,         table_descriptive_stats(playlists, users),

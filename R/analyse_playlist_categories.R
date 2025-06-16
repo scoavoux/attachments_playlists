@@ -87,3 +87,24 @@ plot_pl_annotations_bysocdem <- function(users_playlists){
   return(filename)
   
 }
+
+
+plot_typeplaylists_poisson <- function(users_playlists){
+  library(modelsummary)
+  mod <- list()
+  for(x in c("an_artiste", "an_contexte", "an_evenement",
+             "an_genre", "an_moment", "an_mood",
+             "an_period", "an_personne", "an_top")){
+    formula <- as.formula(str_glue("{x} ~ gender + age + isei + degree  + log(n_play_2023)"))
+    mod[[x]] <- glm(formula, family = "poisson", data = users_playlists)
+  }
+  names(mod) <- names(mod) %>% 
+    str_remove("an_") %>% 
+    recode_playlists(.what = "category") %>% 
+    as.character()
+  gg <- modelplot(mod, coef_omit = "(Intercept)", 
+                  coef_rename = rev(c("Log vol. play", "Graduate education", "College education", "High school education", "ISEI", "Age in years", "Woman")))
+  filename <- str_glue("output/type_playlist_poisson_reg.png")
+  ggsave(filename, gg)
+  return(filename)
+}
