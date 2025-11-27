@@ -15,31 +15,31 @@ title,cat,valeur
 07 Anciens Favoris,top,1
 1017,moment,0
 100% Riles,artist,1
-Adam & Eve,artist,1
+Adam & Eve,artist,0
 Afro - Deep Forest,artist,1
 Block party,artist,0
 2 - Love Playlist,genre,0
 2000’s classics,top,1
-2018 Blind test,moment,1
+2018 Blind test,moment,0
 2018 News,moment,1
 2018 News,period,0
 2018 sa mère,top,0
 2023 et des gros banjés,top,1
 Chelsea Wolfe ep,artist,1
-312020,event,1
+312020,event,0
 312020,moment,0
 31 Pequenito project,context,0
 31 Pequenito project,event,0
 5 🎹,genre,1
-6h Summer,context,1
+6h Summer,context,0
 6h Summer,moment,0
 6h Summer,mood,1
 Concert TDH Glasgow,artist,1
-Concorde,artist,1
+Concorde,artist,0
 A écouter par moi,person,0
 A écouter par moi,top,0
 A écouter pour se relaxer,context,1
-A-Plk Only 🎧🍯,top,0
+A-Plk Only 🎧🍯,top,1
 DJAX RE UP,artist,1
 A1. Rap Chill (déc 2017),mood,1
 Dinos ✨,artist,1
@@ -53,7 +53,7 @@ All at once,artist,0
 Allemagne,event,0
 Allemagne,genre,1
 Amy,artist,1
-Amy,person,0
+Amy,person,1
 Anniv Oldies,period,1
 Anniv Oldies,person,0
 Gladys night,artist,1
@@ -68,7 +68,7 @@ BOUM,mood,0
 BTB,artist,0
 Muse eurockeennes 2022,artist,1
 Nike ta mère,artist,0
-Badass Bass,mood,0
+Badass Bass,mood,1
 Banners,artist,1
 Baw,artist,1
 Pascale picard,artist,1
@@ -76,12 +76,12 @@ Samia,artist,1
 Bemer on the road VI,artist,0
 Bemer on the road VI,context,1
 Bemer on the road VI,person,0
-Best Of Haendel,top,0
+Best Of Haendel,top,1
 Best Outlander,artist,1
 Best Outlander,genre,0
 Shak,artist,0
 Blind 2,context,1
-Blind Test - Soirée Bad,context,0
+Blind Test - Soirée Bad,context,1
 Blind Test - Soirée Bad,event,1
 Soso madness,artist,1
 Surfaces - chill music,artist,1
@@ -96,16 +96,16 @@ Boum Boum boum,genre,1
 Boum Boum boum,mood,0
 "Break it, Drop it!!",genre,1
 "Break it, Drop it!!",mood,0
-Brossier,artist,1
+Brossier,artist,0
 COLORS,genre,0
-CSE Blind Test,context,0
+CSE Blind Test,context,1
 CSE Blind Test,event,1
 Calme posé,context,1
 Calme/Relaxation/Bebe,context,1
 Calme/Relaxation/Bebe,person,1
 Calming Music for Anxiety / Stress / HSP (Instrume,genre,1
 Carannie,person,0
-blade P,artist,1
+blade P,artist,0
 da3m0ns: ange noir / FK UR SINS,artist,0
 enemy,artist,0
 Chansons d'amour,genre,0
@@ -121,7 +121,7 @@ Classic Shit Vol.5,genre,0
 like a hobo,artist,1
 Classic Shit Vol.5,top,1
 Classic de films,top,1
-Clementine Comptine,context,0
+Clementine Comptine,context,1
 mtbrd,artist,1
 obx,artist,1
 Cmusique allemande de Schutz à Bach,artist,1
@@ -136,7 +136,7 @@ Cool 2015,mood,1
 Cool Mat 4,context,0
 A Massage Classique octobre,context,1
 Cool Mat 4,person,1
-Block party,context,0
+Block party,context,1
 Couzinade🤪,person,0
 Croods Schreiber,artist,1
 Boum Boum boum,context,0
@@ -150,7 +150,7 @@ Crêpes,context,1
 Da Franco Cou'D'Coeur,artist,0
 Da Franco Cou'D'Coeur,person,1
 Danse perso,context,1
-Dam 34,event,1
+Dam 34,event,0
 Dam 34,person,1
 En boucle seul,context,1
 Fifth Harmony,context,0
@@ -164,14 +164,14 @@ ECOS,artist,0
 Electro / Chill / Son,mood,1
 Electrofun,mood,0
 R -JOUR DE TARTIFLETTE,context,0
-Relaxing,context,0
+Relaxing,context,1
 En boucle seul,mood,0
-En boucle seul,top,0
-En mode menace Santana,mood,0
+En boucle seul,top,1
+En mode menace Santana,mood,1
 Enfant,genre,1
 Enfant,person,0
 Epic rap battle of history,period,0
-Erasure - Best Of,top,0
+Erasure - Best Of,top,1
 Sleeping Sheep,context,1
 Spiritualité 2,context,1
 Even terrible teenage me,mood,1
@@ -203,14 +203,14 @@ meditation et zen,context,1
 parade,context,0
 Funfit 2022,mood,0
 Funk of today,period,1
-scout,context,1
+scout,context,0
 Funky and groovy,mood,1
 soiree top juin,context,0
 GIRLS !,artist,0
 GIRLS !,genre,1
 Gentils Garçons,artist,1
 Gentils Garçons,genre,0
-soirée GT,context,0
+soirée GT,context,1
 train2vie,context,0
 🍸🏝,context,0
 💪🏼,context,1
@@ -234,7 +234,7 @@ Antonin et Jules,event,1
 Bayonne 2014,event,1
 Hot Reggaeton Latino,mood,0
 I Guess I'll have to Change my Plan,artist,1
-I Guess I'll have to Change my Plan,mood,1
+I Guess I'll have to Change my Plan,mood,0
 Ibiza,context,0
 Ibiza,event,1
 Ibiza,genre,1
@@ -242,10 +242,10 @@ Ibiza,moment,0
 Booba morceaux les plus populaires 25/05/2017,event,0
 Ils ont osé,genre,0
 Chansons cérémonie,event,1
-Club med,event,0
+Club med,event,1
 Crêpes,event,0
 Funfit 2022,event,0
-JUL a l’encienne,period,0
+JUL a l’encienne,period,1
 janvier 2,event,0
 janvier 2,moment,1
 Gladys night,event,0
@@ -263,12 +263,12 @@ Kundalove,mood,0
 caba et jj,event,0
 daily september 21,event,0
 festayre,event,1
-goa,event,0
+goa,event,1
 Lakestone chap16,event,0
 Laptiteden,artist,1
 marie et gui,event,1
-Les titres du moment 19/08/21,event,1
-Les titres du moment 19/08/21,moment,0
+Les titres du moment 19/08/21,event,0
+Les titres du moment 19/08/21,moment,1
 san josé cool,event,1
 soiree top juin,event,1
 Lewis & Clark,context,0
@@ -289,7 +289,7 @@ Mauvais ordre,artist,1
 10 chansons brit  pour se lever,genre,1
 Badass Bass,genre,1
 Chansons cérémonie,genre,1
-Mica,person,0
+Mica,person,1
 Mole's 2020 soundtrack,context,0
 Chœur NDG,genre,1
 Douceur Vocale,genre,1
@@ -341,12 +341,12 @@ Piano 4 Mains,context,0
 Westwards,genre,1
 Play 5,top,0
 Yéyé 2019,genre,1
-Pop douce pour travailler,mood,1
+Pop douce pour travailler,mood,0
 Poupies,artist,1
 ZoukaLova,genre,1
 Projet ML,context,0
 Projet ML,event,0
-Quiet Hours,mood,0
+Quiet Hours,mood,1
 a hard,genre,1
 arap,genre,1
 chanson française Aurélie,genre,1
@@ -355,7 +355,7 @@ Road to sunny,context,1
 Rock (newschool),period,0
 danse 20,genre,0
 Rock de vioque,period,1
-Rock 🍺,context,1
+Rock 🍺,context,0
 Roline,person,0
 Rolling baby!!,artist,0
 Rolling baby!!,genre,1
@@ -368,7 +368,7 @@ SALOOOO,mood,1
 "SANDRA "" Reflections """,person,0
 SOPHIE evjf,event,1
 STARTER 62,event,0
-SYNTH&TIC -- 80s en héritage,genre,1
+SYNTH&TIC -- 80s en héritage,genre,0
 Salim,artist,0
 goa,genre,1
 guitare loulou,genre,1
@@ -388,19 +388,19 @@ selecton danceFloor,genre,0
 Shak,genre,0
 A Massage Classique octobre,moment,1
 Slow Anniversaire Papa,genre,1
-Sons d'été 🏝,context,1
+Sons d'été 🏝,context,0
 Sons d'été 🏝,moment,0
 Sons d'été 🏝,mood,1
 Sons of Anarchy S03,artist,1
 Sons of Anarchy S03,genre,0
 A1. Rap Chill (déc 2017),moment,1
-Bayonne 2014,moment,0
+Bayonne 2014,moment,1
 Souvenirs d’enfance,mood,0
 Space,genre,0
 Spice Girls #GirlPower,mood,0
-Coup de cœur du week end,moment,0
-St Martin 2015,moment,0
-Stage Delft 2,event,0
+Coup de cœur du week end,moment,1
+St Martin 2015,moment,1
+Stage Delft 2,event,1
 Stage Delft 2,moment,1
 Sunday,mood,0
 Super Junior,artist,1
@@ -411,7 +411,7 @@ Surfaces - chill music,mood,1
 Survival tips,mood,0
 Survival tips,top,0
 TO SHAKE AND MOVE,context,1
-TO SHAKE AND MOVE,mood,1
+TO SHAKE AND MOVE,mood,0
 Fevrier❄️❄️❄️,moment,1
 Flashback,moment,1
 Taytay,artist,0
@@ -420,7 +420,7 @@ Funfit 2022,moment,1
 Injustement oubliés,moment,1
 Theo dessin animés,genre,1
 Thot $hit,artist,0
-Thot $hit,top,1
+Thot $hit,top,0
 Titres du moment,moment,1
 Iron maiden la defense arena 2022,moment,0
 Mole's 2020 soundtrack,moment,1
@@ -442,7 +442,7 @@ Un peu de nous,mood,1
 cOcOvid 19,moment,1
 VB-Chill soirée,genre,0
 VB-Chill soirée,person,0
-Valfrejus 2023,moment,0
+Valfrejus 2023,moment,1
 Vasur,person,0
 Vintage new music,genre,0
 Vintage new music,period,1
@@ -491,8 +491,8 @@ antinea,artist,0
 apologize,artist,0
 Eurythmique,mood,0
 assez !,mood,0
-aux souvenirs oubliés 🤍,moment,0
-Frappe,mood,0
+aux souvenirs oubliés 🤍,moment,1
+Frappe,mood,1
 Hasard Heureux,mood,1
 a🩷🩷🩷🩷🩷,top,0
 Hit Hard,mood,1
@@ -505,12 +505,12 @@ Mon côté babos,mood,1
 NOW VIBES 11/2021,mood,0
 Nike ta mère,mood,1
 blindtest c’est l’été!,moment,0
-bonjour,context,1
+bonjour,context,0
 cOcOvid 19,event,0
 Relaxing,mood,1
 Rock Chill,mood,1
 Sex,mood,1
-chanson d été,context,1
+chanson d été,context,0
 chanson d été,mood,1
 "Sorry, I care..",mood,1
 chansons à faire au ukulele,context,1
@@ -519,7 +519,7 @@ chill rap study,mood,1
 compil tranquille du dimanche,mood,1
 cool love,genre,0
 Techno Cool,mood,1
-YT Zyprexa,mood,1
+YT Zyprexa,mood,0
 You Found me,mood,0
 daily september 21,context,0
 ZoukaLova,mood,1
@@ -527,10 +527,10 @@ a hard,mood,0
 dancing enfants,genre,1
 aux souvenirs oubliés 🤍,mood,1
 coule,mood,1
-digne,mood,0
+digne,mood,1
 delecte d la feuille,mood,0
 delecte d la feuille,top,1
-gonna be a big man someday,mood,1
+gonna be a big man someday,mood,0
 disco dance 1,context,0
 découverte et autres,top,0
 ne me ramène pas,mood,1
@@ -547,9 +547,9 @@ to fill up my heart,mood,1
 xoxo,mood,1
 { 2017 - Sunset },mood,1
 guitare loulou,context,1
-💪🏼,mood,0
+💪🏼,mood,1
 😎🥳,mood,1
-BLINDTEST - A l'ancienne,period,0
+BLINDTEST - A l'ancienne,period,1
 Back to 90s,period,1
 hors ligne Aurélien,context,1
 Classic 2,period,0
@@ -571,11 +571,11 @@ Injustement oubliés,period,0
 vielle music,period,0
 Alela Diane,person,0
 Anniv' mariage pomme le boss,person,1
-lilip,person,0
+lilip,person,1
 Anniversaire papa rock,person,1
 love songs Zaz,genre,0
 Crématorium Papa Françoise,person,1
-main character,mood,0
+main character,mood,1
 marathon nervers,context,0
 marathon nervers,event,1
 mariage jazz,context,0
@@ -584,8 +584,8 @@ Jean-Bernard,person,1
 Joshua’s drill,person,1
 Kidz,person,1
 mes albums,top,1
-mimi,person,0
-Laeti,person,0
+mimi,person,1
+Laeti,person,1
 Mole's 2020 soundtrack,person,1
 mon top du mois juin,top,1
 monday,mood,0
@@ -595,11 +595,11 @@ musiques trad,period,1
 namour,mood,1
 Pascale picard,person,0
 nana,artist,0
-nana,person,0
-Samia,person,0
-new guiana 2017,moment,0
+nana,person,1
+Samia,person,1
+new guiana 2017,moment,1
 Scott,person,1
-news vendredi 10/06/20,event,1
+news vendredi 10/06/20,event,0
 no man,artist,1
 non conventionnelle,genre,0
 nunu,artist,1
@@ -607,7 +607,7 @@ nunu,person,0
 Un peu de nous,person,1
 oby one,artist,1
 old dance,genre,1
-original dansant,context,1
+original dansant,context,0
 original dansant,mood,0
 otis redding best of,top,0
 avec tonton,person,1
@@ -615,12 +615,12 @@ picnic woot,context,1
 picnic woot,event,0
 beajenny,person,1
 playlist pour orl,context,0
-playlist pour orl,person,1
+playlist pour orl,person,0
 pop rock surf,context,0
 pour quand je voudrais faire du sport,moment,0
-pov : tu révises dans un château,mood,0
+pov : tu révises dans un château,mood,1
 profs élèves,context,0
-préhistoire,period,0
+préhistoire,period,1
 blind test Méaudre mai 2023,person,0
 rap classic de vieux! yoyo,top,0
 rape,genre,1
@@ -629,7 +629,7 @@ caba et jj,person,0
 rico loco,artist,1
 rico loco,mood,0
 dad,person,1
-ronaldhino,artist,1
+ronaldhino,artist,0
 ronaldhino,context,0
 rétro cinéma,period,1
 dancing enfants,person,1
@@ -655,7 +655,7 @@ star waz,genre,0
 step rap,context,0
 still,mood,0
 summer tropico,context,0
-summer tropico,genre,1
+summer tropico,genre,0
 summer tropico,mood,1
 지미 ❤️‍🔥,person,1
 the Charly s hit,person,1
@@ -668,7 +668,7 @@ Good Music,top,1
 top 2k18 Coline,top,1
 "HITS 2018 "" vol 2 """,top,0
 La sélec,top,1
-Les titres du moment 19/08/21,top,0
+Les titres du moment 19/08/21,top,1
 Love 🥰,top,0
 une une ancienne version,genre,0
 vendée,genre,0
@@ -679,7 +679,7 @@ TOP ZZ Top,top,1
 vsco,context,0
 wet sand,artist,0
 wet sand,mood,0
-Titres du moment,top,0
+Titres du moment,top,1
 wg party,person,0
 basics,top,1
 les best,top,1
@@ -702,9 +702,9 @@ selecton danceFloor,top,0
 🍻🍾,mood,0
 the Beatles en 20 titres,top,1
 the greatest,top,1
-titres du moment,top,0
+titres du moment,top,1
 top jazz,top,1
-🚀🌑,mood,0
+🚀🌑,mood,1
 # musique,artist,0
 # musique,context,0
 # musique,event,0
@@ -757,7 +757,7 @@ top jazz,top,1
 #Old School,top,0
 (pl François) Sénégal,artist,0
 (pl François) Sénégal,context,0
-(pl François) Sénégal,moment,0
+(pl François) Sénégal,moment,1
 (pl François) Sénégal,mood,0
 (pl François) Sénégal,period,0
 (pl François) Sénégal,person,1
@@ -884,7 +884,7 @@ top jazz,top,1
 02 The Avener,top,0
 05/23,artist,0
 05/23,context,0
-05/23,event,0
+05/23,event,1
 05/23,genre,0
 05/23,moment,1
 05/23,mood,0
@@ -1073,7 +1073,7 @@ top jazz,top,1
 2003,top,0
 2018 Blind test,artist,0
 2018 Blind test,context,1
-2018 Blind test,event,0
+2018 Blind test,event,1
 2018 Blind test,genre,0
 2018 Blind test,mood,0
 2018 Blind test,period,0
@@ -1160,7 +1160,7 @@ top jazz,top,1
 23_05 et 06 mai juin,context,0
 23_05 et 06 mai juin,event,1
 23_05 et 06 mai juin,genre,0
-23_05 et 06 mai juin,moment,0
+23_05 et 06 mai juin,moment,1
 23_05 et 06 mai juin,mood,0
 23_05 et 06 mai juin,period,0
 23_05 et 06 mai juin,person,0
@@ -2124,7 +2124,7 @@ Calming Music for Anxiety / Stress / HSP (Instrume,top,0
 Cantates Bach,artist,1
 Cantates Bach,context,0
 Cantates Bach,event,0
-Cantates Bach,genre,0
+Cantates Bach,genre,1
 Cantates Bach,moment,0
 Cantates Bach,mood,0
 Cantates Bach,period,0
@@ -2211,7 +2211,7 @@ Chelsea Wolfe ep,period,0
 Chelsea Wolfe ep,person,0
 Chelsea Wolfe ep,top,0
 Chill at Crème brûlée,artist,0
-Chill at Crème brûlée,context,0
+Chill at Crème brûlée,context,1
 Chill at Crème brûlée,event,0
 Chill at Crème brûlée,genre,0
 Chill at Crème brûlée,moment,0
@@ -2294,7 +2294,7 @@ Clementine Comptine,person,1
 Clementine Comptine,top,0
 Club med,artist,0
 Club med,genre,0
-Club med,moment,0
+Club med,moment,1
 Club med,mood,0
 Club med,period,0
 Club med,person,0
@@ -2304,7 +2304,7 @@ Cmusique allemande de Schutz à Bach,event,0
 Cmusique allemande de Schutz à Bach,genre,1
 Cmusique allemande de Schutz à Bach,moment,0
 Cmusique allemande de Schutz à Bach,mood,0
-Cmusique allemande de Schutz à Bach,period,0
+Cmusique allemande de Schutz à Bach,period,1
 Cmusique allemande de Schutz à Bach,person,0
 Cmusique allemande de Schutz à Bach,top,0
 Compile 2012 - 2104,artist,0
@@ -2419,7 +2419,7 @@ Céleste,context,0
 Céleste,event,0
 Céleste,genre,0
 Céleste,moment,0
-Céleste,mood,0
+Céleste,mood,1
 Céleste,period,0
 Céleste,top,0
 Célya à la sieste 😴,artist,0
@@ -2835,7 +2835,7 @@ FKJ Influences Oct 16,mood,0
 FKJ Influences Oct 16,period,0
 FKJ Influences Oct 16,person,0
 FKJ Influences Oct 16,top,0
-"FLOW - Woodkid, London Grammar",artist,1
+"FLOW - Woodkid, London Grammar",artist,0
 "FLOW - Woodkid, London Grammar",context,0
 "FLOW - Woodkid, London Grammar",event,0
 "FLOW - Woodkid, London Grammar",genre,0
@@ -3385,7 +3385,7 @@ Il va faire tout noir,artist,0
 Il va faire tout noir,event,0
 Il va faire tout noir,genre,0
 Il va faire tout noir,moment,0
-Il va faire tout noir,mood,0
+Il va faire tout noir,mood,1
 Il va faire tout noir,period,0
 Il va faire tout noir,person,0
 Il va faire tout noir,top,0
@@ -3932,7 +3932,7 @@ LoveSongs,artist,0
 LoveSongs,context,0
 LoveSongs,event,0
 LoveSongs,moment,0
-LoveSongs,mood,1
+LoveSongs,mood,0
 LoveSongs,period,0
 LoveSongs,person,0
 LoveSongs,top,0
@@ -4203,7 +4203,7 @@ Mix 2000's Rock,mood,0
 Mix 2000's Rock,period,1
 Mix 2000's Rock,person,0
 Mix 2000's Rock,top,0
-Mix par G.Brassens J.Brel C.Nougaro C.Aznavour etc,artist,1
+Mix par G.Brassens J.Brel C.Nougaro C.Aznavour etc,artist,0
 Mix par G.Brassens J.Brel C.Nougaro C.Aznavour etc,context,0
 Mix par G.Brassens J.Brel C.Nougaro C.Aznavour etc,event,0
 Mix par G.Brassens J.Brel C.Nougaro C.Aznavour etc,genre,0
@@ -4292,7 +4292,7 @@ Mp3 tah l'époque,context,0
 Mp3 tah l'époque,event,0
 Mp3 tah l'époque,genre,0
 Mp3 tah l'époque,mood,0
-Mp3 tah l'époque,period,0
+Mp3 tah l'époque,period,1
 Mp3 tah l'époque,person,0
 Mp3 tah l'époque,top,0
 Musculation,artist,0
@@ -4427,7 +4427,7 @@ NOW VIBES 11/2021,genre,0
 NOW VIBES 11/2021,moment,1
 NOW VIBES 11/2021,period,0
 NOW VIBES 11/2021,person,0
-NOW VIBES 11/2021,top,0
+NOW VIBES 11/2021,top,1
 NRV - 🧢,artist,0
 NRV - 🧢,context,0
 NRV - 🧢,event,0
@@ -4669,7 +4669,7 @@ PL du 29 dec 2012,artist,0
 PL du 29 dec 2012,context,0
 PL du 29 dec 2012,event,1
 PL du 29 dec 2012,genre,0
-PL du 29 dec 2012,moment,0
+PL du 29 dec 2012,moment,1
 PL du 29 dec 2012,mood,0
 PL du 29 dec 2012,period,0
 PL du 29 dec 2012,person,0
@@ -4851,7 +4851,7 @@ Pignato 2,top,0
 Pilouzic2023,artist,0
 Pilouzic2023,context,0
 Pilouzic2023,genre,0
-Pilouzic2023,moment,0
+Pilouzic2023,moment,1
 Pilouzic2023,mood,0
 Pilouzic2023,period,0
 Pilouzic2023,person,0
@@ -4864,7 +4864,7 @@ Plaisir,moment,0
 Plaisir,mood,1
 Plaisir,period,0
 Plaisir,person,0
-Plaisir,top,0
+Plaisir,top,1
 Play 5,artist,0
 Play 5,context,0
 Play 5,event,0
@@ -5230,7 +5230,7 @@ Rock de vioque,top,0
 Rock en seine,artist,0
 Rock en seine,context,0
 Rock en seine,event,1
-Rock en seine,genre,1
+Rock en seine,genre,0
 Rock en seine,moment,0
 Rock en seine,mood,0
 Rock en seine,period,0
@@ -5967,7 +5967,7 @@ Time to rock that shit,context,0
 Time to rock that shit,event,0
 Time to rock that shit,genre,1
 Time to rock that shit,moment,0
-Time to rock that shit,mood,0
+Time to rock that shit,mood,1
 Time to rock that shit,period,0
 Time to rock that shit,person,0
 Time to rock that shit,top,0
@@ -6160,7 +6160,7 @@ Velvet,context,0
 Velvet,event,0
 Velvet,genre,0
 Velvet,moment,0
-Velvet,mood,0
+Velvet,mood,1
 Velvet,period,0
 Velvet,person,0
 Velvet,top,0
@@ -6637,7 +6637,7 @@ blind test Méaudre mai 2023,period,0
 blind test Méaudre mai 2023,top,0
 blindtest c’est l’été!,artist,0
 blindtest c’est l’été!,context,1
-blindtest c’est l’été!,event,0
+blindtest c’est l’été!,event,1
 blindtest c’est l’été!,genre,0
 blindtest c’est l’été!,mood,0
 blindtest c’est l’été!,period,0
@@ -6994,7 +6994,7 @@ disco dance 1,mood,0
 disco dance 1,period,0
 disco dance 1,person,0
 disco dance 1,top,0
-djubaka,artist,1
+djubaka,artist,0
 djubaka,context,0
 djubaka,event,0
 djubaka,genre,0
@@ -7623,7 +7623,7 @@ mon top du mois juin,mood,0
 mon top du mois juin,period,0
 mon top du mois juin,person,0
 monday,artist,0
-monday,context,1
+monday,context,0
 monday,event,0
 monday,genre,0
 monday,moment,0
@@ -7724,7 +7724,7 @@ méléagan,genre,0
 méléagan,moment,0
 méléagan,mood,0
 méléagan,period,0
-méléagan,person,0
+méléagan,person,1
 méléagan,top,0
 nadiya,artist,1
 nadiya,context,0
@@ -8388,7 +8388,7 @@ syl jep,genre,0
 syl jep,moment,0
 syl jep,mood,0
 syl jep,period,0
-syl jep,person,0
+syl jep,person,1
 syl jep,top,0
 séance de sport,artist,0
 séance de sport,context,1
@@ -8470,7 +8470,7 @@ toin,genre,0
 toin,moment,0
 toin,mood,0
 toin,period,0
-toin,person,0
+toin,person,1
 toin,top,0
 top 20,artist,0
 top 20,context,0
@@ -8587,7 +8587,7 @@ twilight,top,0
 une une ancienne version,artist,0
 une une ancienne version,context,0
 une une ancienne version,event,0
-une une ancienne version,moment,0
+une une ancienne version,moment,1
 une une ancienne version,mood,0
 une une ancienne version,period,0
 une une ancienne version,person,0
@@ -8620,7 +8620,7 @@ vehiculisé,period,0
 vehiculisé,person,0
 vehiculisé,top,0
 vendée,artist,0
-vendée,context,1
+vendée,context,0
 vendée,event,0
 vendée,moment,0
 vendée,mood,0
@@ -8781,7 +8781,7 @@ yxhdjwjwkdkdkdkrk,top,0
 à ré-écouter,mood,0
 à ré-écouter,period,0
 à ré-écouter,person,0
-à ré-écouter,top,0
+à ré-écouter,top,1
 ça a l’air cool,artist,0
 ça a l’air cool,context,0
 ça a l’air cool,event,0
@@ -8999,3 +8999,1003 @@ yxhdjwjwkdkdkdkrk,top,0
 🤷🏻‍♀️🙂,period,0
 🤷🏻‍♀️🙂,person,0
 🤷🏻‍♀️🙂,top,0
+PAPA,period,0
+Marc Brothers,period,0
+Sophie,period,0
+2016/01,period,0
+Déconfinement Total,period,0
+J -JUKEBOX HITS 05,period,0
+Vianney,period,0
+Lena,period,0
+à l'ammoniaque,period,0
+“may 22,period,0
+Musique Jorys,period,0
+happy hour,period,0
+Berlin 2022,period,0
+pirate,period,0
+Prof. Genki's MIND OVER MURDER,period,0
+musicas portuguesas,period,0
+La vie est belle I,period,0
+choupi,period,0
+BRUTAL TRAINING,period,0
+Reggae - Steel Pulse,period,0
+divers sympa,period,0
+😌,period,0
+Chansons françaises.,period,0
+Musique,period,0
+Tori Kelly,period,0
+mamie,period,0
+ANouveau,period,0
+46 la playlist de ma vie by fld,period,0
+le piège,period,0
+say my name,period,0
+<3 du moment bis,period,0
+DailyMusics 2017.09,period,0
+Versions de reference,period,0
+Jazz Instru,period,0
+jazzy,period,0
+♫ Harmonica,period,0
+100% 77,period,0
+AA JUIN 2022,period,0
+Blues - Bjørn Berge,period,0
+Ambiance Pop Rock Soft,period,0
+crzy,period,0
+Ternaire et 3 tps,period,0
+jazz & soul,period,0
+été 2k,period,1
+boom bomm,period,0
+Dalychou,period,0
+Flow inspiré par (12/4/2019),period,0
+BLINK,period,0
+Spring 🌸🌷,period,0
+playlist soirée 2,period,0
+1802211027,period,0
+mes titres,period,0
+Classique 2016,period,0
+Jouer,period,0
+France - L'Art  A Tatouille,period,0
+Harry’s House,period,0
+terre justin,period,0
+Deezer : Mix from 10101,period,0
+folklore+evermore,period,0
+Birds In Row,period,0
+Aqua-bike 1,period,0
+CREMAILLERE,period,0
+ss,period,0
+Scène Française,period,0
+variétés 3,period,0
+vacance 2,period,0
+Hiro,period,0
+Chandelier (Piano Version),period,0
+masha et michka,period,0
+OST jeux vidéos,period,0
+chant 2022,period,0
+ronde,period,0
+Bruxelles,period,0
+"damso, dinos",period,0
+23 top fevrier,period,0
+bébé,period,0
+coups de coeur virgile,period,0
+Best of The-Dream,period,0
+Angola,period,0
+LUIS,period,0
+Flexx,period,0
+dj max,period,0
+Films 🎬,period,0
+lalgerino,period,0
+Marina Kaye,period,0
+مزيكا Mazzika,period,0
+Mix Eurovision 2023,period,0
+run this town,period,0
+In the car,period,0
+Cubaton,period,0
+👵 Mamie 😢,period,0
+Variété US,period,0
+chansons FR,period,0
+Aerosmith,period,0
+cycle2,period,0
+choeur musique classique,period,0
+Alliés,period,0
+dance anniv 2,period,0
+L'atelier de Roxane,period,0
+A diffuser,period,0
+Elisa TOVATI,period,0
+mozart opera rock,period,0
+#YO30,period,0
+hall of fame - chill,period,0
+Rock Drum&Bass,period,0
+Best Of Juliette Greco,period,0
+Voice Girl,period,0
+playlist calm,period,0
+pilates 22/23 partie B,period,0
+MUSIC Ambiance 1,period,0
+Preisner zibgnew,period,0
+Papa 🖤,period,0
+Happyness,period,0
+Coolazik,period,0
+Le feu,period,0
+vendredi 01/04/22,period,0
+Black Metal Top Tracks,period,0
+A comme ALICIA KEYS,period,0
+Elian 5,period,0
+Thibault Cauvin,period,0
+Electro Bass Chill,period,0
+Saletés,period,0
+2023 03 Mars,period,0
+wh0r£ $ummer,period,0
+Apero ✨✨,period,0
+musique juin 2019,period,0
+popdance,period,0
+A soirée,period,0
+ode à un dimanche pluvieux,period,0
+XXl,period,0
+Leto,period,0
+RYTHMO 34,period,0
+Voiture Roland,period,0
+HipHop,period,0
+mix madonna,period,0
+121,period,0
+Danemark - divers,period,0
+vh,period,0
+Antoine B,period,0
+Niska commando,period,0
+Noel 2022,period,0
+GARFUNKEL Art 1977 Watermark,period,0
+Blended,period,0
+'Albums à écouter - Inde,period,0
+ARAD,period,0
+Émilie Simon Ombre,period,0
+Songs For A Father,period,0
+21/02/21,period,0
+Rock robel Vol 2,period,0
+CD Rap,period,0
+Butterfly me to your Heart 🦋,period,0
+Flat White Please,period,0
+Saga,period,0
+Thah l'époque,period,0
+Shiloh,period,0
+Patrice et Mario,period,0
+chorale 2022,period,0
+fitt,period,0
+Rool for rules,period,0
+Essential Latino disco,period,0
+reggae-Plan,period,0
+soirée 4 mai 2019,period,0
+hall of fame - Rap ricain,period,0
+70's Disco,period,1
+rstream,period,0
+Elektroandco,period,0
+voices,period,0
+Diane 's birthday,period,0
+🍸,period,0
+Ludwig Von 88,period,0
+adam lambert,period,0
+grands airs d'opéra,period,0
+Play liste beranger,period,0
+har dance,period,0
+Ambiance comique,period,0
+Irrésistible,period,0
+Divers...,period,0
+To keep,period,0
+2019/08,period,0
+T04/04/14,period,0
+En Été on fait TB ☀️🌴,period,0
+gris,period,0
+Fev 19,period,0
+échelon 2,period,0
+Thomas 3.0,period,0
+mitski,period,0
+eleonore,period,0
+East Europe,period,0
+A Bonne humeur,period,0
+TUBES « 80's (FR) »,period,1
+POP8,period,0
+Chanteuse: TRACY CHAPMAN,period,0
+LOVE UNIMITED,period,0
+St Valentin,period,0
+plk,period,0
+Amsterdam 2016,period,0
+Mariage G&S,period,0
+petit biscuit,period,0
+Apéro 0,period,0
+flood of tears,period,0
+Metal-Punk-Rock,period,0
+anniv hardrpck,period,0
+Pop/rock,period,0
+Madonna Remixes,period,0
+Afro - Masara Traore,period,0
+likes 2020.08,period,0
+Poursuite ténèbres,period,0
+Gary Willis 2019,period,0
+D'un pays à l'autre,period,0
+Top juillet 2022,period,0
+Ecriture,period,0
+DANCE MACHINE 05,period,0
+La Synesia sa va,period,0
+Janvier 2k23,period,0
+M.A,period,0
+1 - rock soirée,period,0
+21,period,0
+𝔥𝔬𝔠 𝔢𝔯𝔞𝔱 𝔦𝔫 𝔳𝔬𝔱𝔦𝔰,period,0
+still fresh,period,0
+7 BIGUINE Pioche etc,period,0
+1/ JOHNNY HALLYDAY,period,0
+tout le temps,period,0
+HANDBALL,period,0
+Djé's Birthday Party,period,0
+RNB old school,period,1
+rnroll baby,period,0
+FIP by Microman,period,0
+au lit,period,0
+IDEES FUDGE,period,0
+Bachata 2021 - Bachata music released in 2021,period,0
+E. Mai 20,period,0
+pour un repas 8,period,0
+NINHO 🤍,period,0
+Soirees,period,0
+Atlantide,period,0
+Pupute,period,0
+2021 Classic Rock,period,1
+Rock. Essentiel du Rock Français,period,0
+rock nouveau,period,0
+Eminem bob,period,0
+Dada,period,0
+influence,period,0
+stoner reggae playlist vol 3,period,0
+friday,period,0
+ZZZZZZ JM Discarded,period,0
+Julien Doré sept 2020,period,0
+Gun’s and roses,period,0
+Barcella,period,0
+amour erotique,period,0
+MUSIQUE FRANÇAISE,period,0
+WAKE UP IN HAPPINESS,period,0
+QDB : Que Du Bon,period,0
+Psy,period,0
+FR Chill,period,0
+feel good 01.2022,period,0
+nouveautés août,period,0
+⚠︎Mouv,period,0
+Hélène,period,0
+kebou,period,0
+Voiture janvier 2023,period,0
+odile,period,0
+Dee Djil One,period,0
+pire ennemi,period,0
+Trail 2023,period,0
+Coup de coeur fox,period,0
+🎷🎼🎹juillet 2021🎻📯🎵,period,0
+Jean-Michel jarre,period,0
+cosmic time,period,0
+OLD SCHOOL,period,1
+Spring 2021,period,0
+late goove,period,0
+Iammddb bitch,period,0
+time,period,0
+Edits,period,0
+Best of SCH,period,0
+bresil,period,0
+FLY,period,0
+STARTER 12,period,0
+Léo-Paul,period,0
+D-Day in Japan,period,0
+butterflies,period,0
+Neteyam,period,0
+Cha' Stress,period,0
+souvenir zouk,period,0
+Sad sad girlies,period,0
+falou,period,0
+Wu-Tang Clan Live,period,0
+gun's ans roses,period,0
+mar,period,0
+kirikou,period,0
+inspi stupidles,period,0
+L'IMPÉRATRICE,period,0
+NOCTURNE,period,0
+moraira,period,0
+Shushee,period,0
+french music,period,0
+aperitif,period,0
+AMBIANCE NL AN,period,0
+Dance 1,period,0
+Break,period,0
+COCKTAIL MARIAGE,period,0
+PLAYLIST APPART ☀️,period,0
+DANCE COOL,period,0
+hit 2021,period,0
+Hot salsa,period,0
+sy. vie,period,0
+mae,period,0
+préférences,period,0
+@april22,period,0
+mateo,period,0
+An 1980,period,1
+ф❤️,period,0
+noa,period,0
+Tavener,period,0
+GOOD MOVE,period,0
+rappelle-toi,period,0
+Peufrap Vol.6,period,0
+Extended version,period,0
+Nov2017,period,0
+flow vibronics,period,0
+Summer ☀️,period,0
+Zen List,period,0
+90s-00s Hip Hop,period,1
+soirée groove,period,0
+#1 EDM,period,0
+danse Alice,period,0
+the very best off,period,0
+❤🤍,period,0
+Février 2011,period,0
+1.2 - Coup de ❤️ - Automne 2019,period,0
+Playlist1,period,0
+postmodern jukebox,period,0
+mise en attente,period,0
+2021 09 Septembre,period,0
+𝕲4𝕸1𝕹𝕲,period,0
+2000✌🏼☀️,period,1
+Cactus et limonade,period,0
+rly sad,period,0
+ethan,period,0
+Mariage - Rock,period,0
+NEW INTER,period,0
+fababy,period,0
+flow,period,0
+rugby,period,0
+Maxence et Armand,period,0
+début 3,period,0
+"Film Jeunes, Drogués Et Rien À Foutre-32-",period,0
+chill du moment,period,0
+Playlist 2018,period,0
+jeunesse,period,0
+🤐,period,0
+Pierrick Expo Nuit Mix,period,0
+playlist Sabine,period,0
+crossfit jordy,period,0
+Poppy station,period,0
+playlist de la pêche 🎉,period,0
+COPEN,period,0
+Soirey posey,period,0
+mes préférés 2,period,0
+playlist inspiration,period,0
+TAKESHI,period,0
+REGGAE ROOTS,period,0
+Joke,period,0
+nimp's,period,0
+"COMPIL Inx, U2, Depeche Mode...",period,0
+Movie themes,period,0
+Bilangue,period,0
+Youn Sun Nah,period,0
+Wintersun,period,0
+ROCK Pour Danser niveaux 1et 2,period,0
+Top 2022 de Michel,period,0
+Hugo TSR  soir,period,0
+France 2010,period,1
+avril 23,period,0
+B zic qui ambiance,period,0
+6 months,period,0
+fly,period,0
+sorbonne,period,0
+Mouarf,period,0
+Instrumental music,period,0
+playlist à danser,period,0
+Snow Patrol,period,0
+DUT,period,0
+anniv sophie 40,period,0
+Hozier,period,0
+Playlist 20,period,0
+blindtest famille,period,0
+Objectif Semi marathon,period,0
+Marmailles,period,0
+Summer oh yeah,period,0
+Sadness un my mind,period,0
+Hip Hop festif,period,0
+rap us preferées,period,0
+elo + valou,period,0
+A -SOIRÉE BOOMER ROCK 4,period,0
+COOL FAMILLE🎸,period,0
+leo,period,0
+apero diner,period,0
+dayli mix 1,period,0
+2020 Autumn,period,0
+Chacha,period,0
+GLORIA ESTEFAN » Gloria! »,period,0
+musique classique italienne,period,0
+Cody Simpson +++,period,0
+#August 2016,period,0
+Hard Met,period,0
+funky année 80,period,1
+Love - Sexy Dance 3D,period,0
+😼🧚🏼‍♀️🦋🐳🍀🍏🪀🎨🏵🛵🌅,period,0
+Moonsorrow - 1999 - Tama Ikuinen Talvi,period,0
+Noé et Tilio,period,0
+Olympia 1966 - Sacha Distel,period,0
+John is cool,period,0
+2Pac - Pac's Life,period,0
+DailyMusics 2017.01,period,0
+Kingdom Hearts,period,0
+Rédaction,period,0
+Amoncellement tecktonik,period,0
+Ben E. King,period,0
+Style of Eye,period,0
+🦋,period,0
+parodie et musiques Anticapi,period,0
+l’Élite des playlist,period,0
+RAP Training,period,0
+Crazy sh*t,period,0
+Black Devil Disco Club,period,0
+it’s NOW,period,0
+1.2 - Playlist Automne 2020,period,0
+Vieilles musiques,period,0
+mariage Soussou,period,0
+Buena vista social club,period,0
+Sport 💐,period,0
+Repas Cht'i,period,0
+habe das Licht gewählt,period,0
+"Dave Brubeck, Stan Getz, Nina Simone,Herbie Hancoc",period,0
+Joss - Acoustic & live,period,0
+electro minimal deep,period,0
+j’ten prie,period,0
+rone,period,0
+olivia,period,0
+Festival,period,0
+David Arnold - Die Another Day,period,0
+theo lawrence,period,0
+CHILDHOOD 🎶,period,0
+Gerry cinnamon,period,0
+Gus pop rock,period,0
+Elvis,period,0
+Road session,period,0
+Back to best 80's and 90's -- par Coton Tige,period,1
+Lucenzo,period,0
+Disco REMIX,period,0
+Fabienne,period,0
+Musique Tom,period,0
+Daniel Johnston,period,0
+Rock à moi,period,0
+[empty],period,0
+Mariage Emma et Thomas,period,0
+Pierrick Végétal Mix,period,0
+CD mariage,period,0
+Jazz soul,period,0
+variété mondiale,period,0
+Willy WILLIAM,period,0
+zzzz,period,0
+Kurt 3,period,0
+Luchon 2018,period,0
+GDD SOUL,period,0
+MWll,period,0
+Pop & Variété,period,0
+new rap,period,0
+Ca bosse,period,0
+Musique Classique,period,0
+"New/Cold/Dark Wave, Electro Pop, EBM, Goth...",period,0
+Bili-Laîkaî,period,0
+choeur de Noël,period,0
+Reggae reggae laposto,period,0
+lazy,period,0
+chill jazzy,period,0
+Blanco White,period,0
+Dam 12-18,period,0
+mars2021,period,0
+son qui tape,period,0
+benee,period,0
+hip pop pop pop,period,0
+2022/06,period,0
+Keen'V ++ Ange ou Demon,period,0
+VRAC,period,0
+chill lounge,period,0
+pil janvier,period,0
+LUCIE,period,0
+Musique au T(he)OP,period,0
+loulou.8,period,0
+comfort songs,period,0
+maman♥♡♥♡♥♡● :D,period,0
+Nick's workout playlist,period,0
+Snow 2021-2022,period,0
+Electro Funcky vol2,period,0
+Good Vibes😁Lucho1331,period,0
+PNL morceaux les plus populaires 24/08/2016,period,0
+Cap Vert - Americo Brito,period,0
+artisticdance,period,0
+Musique Israélienne,period,0
+Mon flow,period,0
+hip-hop - échauffement,period,0
+Oui oui baguette,period,0
+One life of pure song,period,0
+chill soul,period,0
+Bonfire and liquid sugar,period,0
+No Overlap,period,0
+Mes coups de coeur,period,0
+SHOWER 6,period,0
+RETRO ZOUK,period,1
+folk rocky time,period,0
+Saint Vincent,period,0
+3) Old school cool,period,1
+Le top du top 🎉,period,0
+Stéphane sport,period,0
+22 top mars,period,0
+tttttt,period,0
+ChillOut2018,period,0
+Thailinou,period,0
+POZÉ,period,0
+The god of pop,period,0
+12_04,period,0
+spiritualité 1,period,0
+Jules bg,period,0
+France 1970/1980,period,1
+Brasilera chill vibes,period,0
+Lino - Radio Bitume,period,0
+Albums#2020,period,1
+2RJE,period,0
+Techno house chill,period,0
+stranger,period,0
+Rap d’avant,period,1
+disney channel,period,0
+Idem,period,0
+trie pt2,period,0
+BONES,period,0
+Freeletics,period,0
+Une odeur de poutine,period,0
+Titi et popo,period,0
+80´S..,period,1
+Lacrim _ Corléon,period,0
+dancedancedance,period,0
+2.Mariage : repas,period,0
+#2021_Juillet,period,0
+Musiques latines,period,0
+Eléo,period,0
+jour de l'an,period,0
+gay,period,0
+gospel,period,0
+Zéphyr,period,0
+🇬🇧,period,0
+🚙💨💨💨,period,0
+2017-05,period,0
+SCH 24.05 ❤️‍🔥,period,0
+Compil_Dance,period,0
+La fiesta,period,0
+OrchestreJazz,period,0
+19h50,period,0
+mon amour,period,0
+Musique église,period,0
+Body 2,period,0
+Musique Alexia,period,0
+The Vamps,period,0
+Vangelis,period,0
+Isa anniversaire 1,period,0
+Deserted Fear,period,0
+Tazz2,period,0
+ZebraKing,period,0
+j'ai trop zoné,period,0
+00 1998,period,1
+uuu,period,0
+adventures on the sea,period,0
+Romantic 🥀🌇🌊❤️🌌,period,0
+Anniv2,period,0
+Valladovibe,period,0
+Go Pro,period,0
+Ekseption,period,0
+sting live panthéon Paris,period,0
+Théatre,period,0
+Back to the 90's,period,1
+Hip hop / Rap,period,0
+Best-Of 2013-19,period,0
+Niska morceaux les plus populaires 24/08/2016,period,0
+Achats,period,0
+Baroque mélancolique,period,0
+Headroom Set List 2,period,0
+Rap FR Posé,period,0
+Ma Musique à Moi ! 😉,period,0
+Kassav',period,0
+Nouvel Annee 2010 - All Inclusive,period,0
+une dernière fois,period,0
+on bouge,period,0
+mmmaaaahhhhmmmmmaaahhh,period,0
+Salle Low BPM,period,0
+Loocked Groove EPs,period,0
+Mbt11,period,0
+For history,period,0
+Anastacia,period,0
+Nekfeu-2eme,period,0
+2022 04 TOP AVRIL,period,0
+Monde,period,0
+rap it !,period,0
+CD,period,0
+Mix psy by deezer GUUUUUD,period,0
+CRPVI,period,0
+MA CHANSON,period,0
+SPORTIVES1000rr,period,0
+Bach: Oeuvres pour clavier - clavecin,period,0
+Coyote,period,0
+Aa français,period,0
+DB Schenker!!,period,0
+#confinement,period,0
+slow2,period,0
+Salsa 2017,period,0
+battlefield,period,0
+ELECTRO 2021,period,0
+ska dub reggae 2tone rocksteady,period,0
+submarine,period,0
+Pop/Rock Américaine,period,0
+Joss - Sample,period,0
+24 mars soir,period,0
+Julie & greg,period,0
+bar yieuv,period,0
+RN 7,period,0
+CHILL GOOD VIBES,period,0
+musique espagnol danse,period,0
+Lo-Fi Beats,period,0
+'A écouter - Panama,period,0
+Surviving,period,0
+Romeo Elvis-Intro,period,0
+COLOMBINE - ENFANTS TERRIBLES -,period,0
+Nomad,period,0
+KARAOKÉ,period,0
+Hellfest 2020 AL1,period,0
+With Lili,period,0
+Toutouyoutou,period,0
+The VD,period,0
+rap 2,period,0
+van morrisson,period,0
+Course Ginette,period,0
+Chant jazz,period,0
+chaque dimanche #1,period,0
+Eleonore,period,0
+James Blunt : les indispensables,period,0
+Olympia 2002 - Christophe,period,0
+Chants militaires,period,0
+HARD CANDIES,period,0
+Nostalgie,period,0
+"#one,tow,three,star girl!💕😘🎶",period,0
+motiv,period,0
+hope,period,0
+gg manga,period,0
+John Legend,period,0
+homo,period,0
+Shosta symph7 Leningrad,period,0
+RAP COOL VIBES,period,0
+HULDA,period,0
+Coldplay candlelight,period,0
+Gambi,period,0
+Chachon,period,0
+Auriane 1809,period,0
+QLF,period,0
+Best of Country (My Own),period,0
+Soirée du 4 Juillet,period,0
+IN MY WORLD,period,0
+tu sais pas,period,0
+best of musique classique,period,0
+"si jamais tu viens ici, j'aimerais qu'on parle",period,0
+rachel,period,0
+.JAZZ _ Piano jazz,period,0
+Tenrac,period,0
+Feria,period,0
+RESCUED ROCK,period,0
+black and white papier 2,period,0
+Mama,period,0
+oriana Soirée,period,0
+classe en 0,period,0
+Été ☀️🏖,period,0
+cheval mathalix,period,0
+BRA21,period,0
+Artists - Frog Leap Studio,period,0
+pub ❤️,period,0
+Mc,period,0
+Guitare classique,period,0
+fit,period,0
+"Ghostbusters I, II & Afterlfe",period,0
+DEUTSCHLAND,period,0
+Château de Versailles,period,0
+JUL 4 JUIN 2022 👩🏻‍❤️‍👨🏻,period,0
+E viva l'Italia,period,0
+Atomic,period,0
+chansons potentielles,period,0
+Molière,period,0
+Ambiance - Accoustic,period,0
+Bonne nuit 🌙,period,0
+2022 Top Deezer,period,0
+david 2022,period,0
+Playlist musiques tristes,period,0
+turc,period,0
+Soirée Reggae,period,0
+The end of the fucking world,period,0
+voilà,period,0
+chillin,period,0
+Sport maison,period,0
+likes 2018.07,period,0
+2020_07_06,period,0
+Sanemi Shinazugawa kimetsu no yaiba(demon slayer)N,period,0
+#Snoop,period,0
+anniversaire Hortense,period,0
+naia,period,0
+WHITESNAKE 1982  Saints and Sinners,period,0
+📈📈📈,period,0
+SUMMER VNERF 2022,period,0
+d'la balle,period,0
+Netflix 🟥,period,0
+pour Manon,period,0
+Basile soir,period,0
+trucs sympa,period,0
+Rock'n Old,period,1
+rock am ring 2020,period,0
+Balearic gabba,period,0
+dodo 😴😪,period,0
+tg ❤,period,0
+likes 2022.03,period,0
+à tester,period,0
+rap français année 2010,period,1
+pat2,period,0
+Pépouze,period,0
+DJ Set by Colorado/Nuit Blanche 1ère édition,period,0
+TENUE,period,0
+handdddd,period,0
+A USN 06 2022 1,period,0
+VPT,period,0
+Rock party,period,0
+Negrito Senpai,period,0
+Beach And Sun,period,0
+schwitchwords,period,0
+hitalia,period,0
+harpe celtique,period,0
+alex et marina,period,0
+tonio,period,0
+milk coffea sugar,period,0
+rock 2,period,0
+Anti déprime,period,0
+Rusty Anderson,period,0
+Ma rade donna,period,0
+apero funk,period,0
+Marzo 2021,period,0
+"Epic, symphonic, medieval, celtic...",period,0
+mort d’homme,period,0
+Louange ❤️,period,0
+light in 2019,period,0
+le défilé 💅,period,0
+restons amis,period,0
+dodo bébé,period,0
+lollie,period,0
+ColdPlay,period,0
+In English Please !,period,0
+Zak Abel,period,0
+WOTP,period,0
+Classiques,period,0
+☀️Summer 2o22,period,0
+🧘🧘,period,0
+Coup de Cœur : Clémentine 🧡,period,0
+anniv dodo,period,0
+Summer Hits,period,0
+1 + Love Playlist +,period,0
+BAPTISTE,period,0
+😂,period,0
+KING,period,0
+Alex goot,period,0
+Acontent,period,0
+été COVID,period,0
+gweno,period,0
+Tout ce qu'on aime,period,0
+ICE Party 2016,period,0
+@0,period,0
+Réalisate,period,0
+Keen'v - phenom'n,period,0
+Valley of the Sun,period,0
+Disney français,period,0
+métal vener,period,0
+muse 2022,period,0
+glee 2,period,0
+En double file : Léonard Cohen,period,0
+00's Jazz,period,1
+Best Of Beatles,period,0
+Soirée d'été,period,0
+Anniv Hervé,period,0
+Mariage - Electro/Ambiance,period,0
+Top Ref,period,0
+#Bruno50yeahhh,period,0
+les Orres 2022,period,0
+BO Sardou,period,0
+Newsboys,period,0
+Clem - Best-of,period,0
+bonne humeur sylvia,period,0
+années 1980,period,1
+URSS,period,0
+🚗SAFIA,period,0
+première dance,period,0
+summer 2k23,period,0
+Sharp Objects,period,0
+rise against,period,0
+ça date,period,1
+1958,period,1
+musique sacrée,period,0
+kassav 4 mai 2022,period,0
+H24,period,0
+Petit rap oklm la street,period,0
+east,period,0
+✩,period,0
+rapsters,period,0
+musique autre,period,0
+powerpoint emma,period,0
+Best of Johnny Hallyday,period,0
+partyyy,period,0
+My Playlist 5,period,0
+soirée zoé chill,period,0
+)(,period,0
+Hugo,period,0
+rnb fr,period,0
+HENLEIX,period,0
+YT Oxmo Crack Puccino,period,0
+À changer h34,period,0
+Horus,period,0
+D.A.N.C.E.,period,0
+This Is Bullet For My Valentine,period,0
+Musica Lento,period,0
+Mix Indigo Night,period,0
+saturday night,period,0
+au coin du feu,period,0
+pLAYLIST,period,0
+Music Mathias,period,0
+even for you,period,0
+CE 2018,period,0
+grayson Capps,period,0
+En voiture Ophélie,period,0
+Noemie,period,0
+MICHEL BERGER,period,0
+Nye,period,0
+TOP2021,period,0
+Liste avec de tout,period,0
+énergique,period,0
+marin fun,period,0
+Curtis Mayfield,period,0
+DOWNLOAD Paris 2017,period,0
+Coraline,period,0
+Stef +,period,0
+COOLNIOK016,period,0
+Cocktail forme,period,0
+Bruce Springsteen 2,period,0
+Standard - A foggy day,period,0
+Perfect songs,period,0
+Le monde de Mélody Gardot,period,0
+VITALIC,period,0
+dance divers,period,0
+Rythme & Percussion - Bresilienne / Africaine,period,0
+Diverses,period,0
+lu divine,period,0
+Rêveuse 🥰😍,period,0
+maison/criée,period,0
+rock allemand,period,0
+French vrac,period,0
+80/2000,period,1
+Z. Like on a cloud ☁️,period,0
+Péchés mignons,period,0
+"reggae, ska...",period,0
+DH,period,0
+stay,period,0
+Nouveautés Pop,period,0
+janvier 2011,period,0
+Camilo,period,0
+Rap fr beau textes,period,0
+zayn,period,0
+jay-z end a,period,0
+So boite …,period,0
+PUNKA LICORNE,period,0
+NOISY Lab.　【通常盤】,period,0
+Dinos ❤️‍🩹,period,0
+DVL,period,0
+1B,period,0
+Pierrick Tenebrae Mix,period,0
+100% BOOGIE WOOGIE,period,0
+bon mood 😁,period,0
+pantomime,period,0
+marrons Vinc,period,0
+Musique actuelle,period,1
+Disney maeva,period,0
+Vonyc sessions 6,period,0
+Euphoria Disturbed,period,0
+70s France,period,1
+Inspiration Allemande,period,0
+gaël faye ..october,period,0
+Mehdy YZ,period,0
+Home Sweet Home,period,0
+Taylor swift,period,0
+Pop espagnole,period,0
+Nathan bar mitsva,period,0
+31/12 1,period,0
+Drama OST,period,0
+ueudj,period,0
+Brazilian Girls,period,0
+Vintage but gold,period,1
+Tracy Chapman,period,0
+Led Zeppelin,period,0
+Mickey,period,0
+moon martin,period,0
+"Ascendance of a Bookworm | openings, endings",period,0
+OLDIES BUT GOODIES,period,1
+Feeling good Olim !!,period,0
+Compile Metal,period,0
+fin ouf,period,0
+only motorhead,period,0
+6) Danses de salon / musique du monde,period,0
+Iontus,period,0
+Chemins De La Vie,period,0
+Woodstock 1969 🌼,period,1
+george mickael,period,0
+Teen's pop,period,0
+Rock dynamique,period,0
+Satan jokers,period,0
+Top 50 mondial,period,0
+funky,period,0
+soleil ☀️,period,0
+playist mimi 🥰,period,0
+Led Zeppelin Tribute,period,0
+Zoo Brazil,period,0
+pov: t'as envie de crier,period,0
+Fall 2018,period,0
+OK Kid,period,0
+VOCALE CLASSIQUE,period,0
+#Best sound,period,0
+😔🌧️,period,0
+H - AMBIANCE LOUNGE CÔTÉ JAZZ,period,0
+Mad in Blues,period,0
+so far so good,period,0
+Kl1,period,0
+pour boumer,period,0
+LATINO ❤️💃🏻,period,0
+Cold Fact Rodriguez,period,0
+sleeping time,period,0
+bleach,period,0
+Nouveauté 😳!,period,0
+Peaky Blinders,period,0
+noir desir 4,period,0
+Toby’s,period,0
+Jewish,period,0
+Drum play along,period,0
+soul muscic,period,0
+chants catholiques,period,0
+rancho,period,0
+"Rock me Tender, Rock me Slow",period,0
+@Playlist Clément,period,0
+1 playlist progressive,period,0
+vite,period,0
+Que caloooor,period,0
+Atelier Hulotte,period,0
+lonely,period,0
+Vincent delerme,period,0
+🔞,period,0
+chilling,period,0
+Alejandro Sanz - Coleccion definitiva,period,0
+Pop 80-90,period,1
+manana,period,0
+kitch,period,0
+Médine Enfants du destin,period,0
+Rock des années 80,period,1
+Trip electro,period,0
+« Rap de Iencli »,period,0
+CHANSON FRANÇAISE NEW,period,0
+Zezau,period,0
+Noël 🥶❄️❄️❄️☃️⛄️🌨,period,0
+Running up that hill,period,0
+Soul Funk Rn'b,period,0
+Teenage me,period,0
+Todrick Hall,period,0
+💤,period,0
+Green Book,period,0
+Mes souliers sont rouges,period,0
+🥂 Janvier 2023 🎉,period,0
+Orient Tone,period,0
+richard hawley,period,0
+Survie,period,0
+AUTOMNE 2018,period,0
+REPAS JAZZ,period,0
+Top January 2022,period,0
+SCH Mix,period,0
+vane,period,0
+pour la vie <3,period,0
+Sale mood,period,0
+Yin yoga,period,0
+NYE Soul,period,0
+Eminem feat's,period,0
+mariage tems et sylvia,period,0
+Operette,period,0
+Outlander,period,0
+z_1980,period,1
+Ray Ventura,period,0
