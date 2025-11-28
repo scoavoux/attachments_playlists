@@ -17,7 +17,8 @@ prepare_prompts <- function(playlists, batch_size){
 annotate_playlists <- function(prompts, 
                                prompt_path, 
                                json_output_path, 
-                               model = "openai/gpt-5.1"){
+                               model = "openai/gpt-5.1",
+                               .wait=TRUE){
   assistant <- chat(name = model, 
                     system_prompt = read_file(prompt_path))
   
@@ -25,9 +26,9 @@ annotate_playlists <- function(prompts,
     assistant, 
     as.list(prompts$gpt_instructions), 
     path = json_output_path, 
-    wait = TRUE
+    wait = .wait
   )
-  return(TRUE)
+  return(batch)
 }
 
 # Read_annotation_results ------
