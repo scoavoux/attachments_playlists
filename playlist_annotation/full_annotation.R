@@ -39,11 +39,11 @@ for(cat in categories){
     annotate_playlists(pr,
                        prompt_path = prompt_path,
                        json_output_path = json_path)
-    d <- read_annotation_results(json_path)
-    write_csv(d, csv_path)
     batch_done[i] <- TRUE
     print(str_glue("{cat} batch {i}/5 done"))
   }
   cat_done[cat] <- TRUE
-
 }
+
+d <- read_annotation_results(json_path)
+write_csv(d, csv_path)
