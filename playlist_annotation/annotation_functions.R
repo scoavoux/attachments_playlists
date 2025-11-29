@@ -1,3 +1,6 @@
+## This scripts includes all functions needed to do zero-shot annotations with
+## GPT.
+
 # Prepare prompts ------
 ##' This function makes a tibble containing formatted prompts to a given batch 
 ##' size from a tibble of playlists titles and ids

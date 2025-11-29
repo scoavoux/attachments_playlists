@@ -1,7 +1,7 @@
-# TODO -------
-# Enfin, utiliser design based supervised model pour prendre en compte les erreurs
-# dans les analyses suivanes
-# https://naokiegami.com/paper/dsl_ss.pdf
+## This scripts runs the few shots annotations of a thousand playlists
+## manually annotated by the two authors and one research assistant.
+## It produces detailed results as well as diagnostics metrics.
+## Ran last Nov. 27, 2025
 
 # Libraries ------
 library(tidyverse)

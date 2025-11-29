@@ -1,3 +1,6 @@
+## This scripts performs FS annotation on the whole corpus.
+## Ran Nov. 28-29, 2025
+
 # Libraries ------
 library(tidyverse)
 library(ellmer)
@@ -34,7 +37,7 @@ for(cat in categories){
       next
       }
     json_path <- str_glue("playlist_annotation/full_annotation/json/results_{cat}_{i}.json")
-    csv_path <- str_glue("playlist_annotation/full_annotation/csv/results_{cat}_{i}.csv")
+    
     pr <- slice(prompts, seq(((i-1)*500+1), i*500))
     annotate_playlists(pr,
                        prompt_path = prompt_path,
@@ -45,5 +48,18 @@ for(cat in categories){
   cat_done[cat] <- TRUE
 }
 
-d <- read_annotation_results(json_path)
-write_csv(d, csv_path)
+json_files <- dir("playlist_annotation/full_annotation/json", full.names = TRUE)
+
+for(cat in categories){
+  cat_files <- json_files[str_detect(json_files, cat)]
+  csv_path <- str_glue("playlist_annotation/full_annotation/csv/full_{cat}.csv")
+  d <- map(cat_files, read_annotation_results) %>% 
+    bind_rows() %>% 
+    rename(playlist_id = "id") %>% 
+    mutate(playlist_id = as.integer(playlist_id))
+  d <- left_join(titles, d) %>% 
+    select(-playlist_id)
+  write_csv(d, csv_path)
+}
+
+

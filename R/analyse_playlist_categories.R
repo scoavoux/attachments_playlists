@@ -2,10 +2,10 @@ recode_playlists <- function(x, .what){
   if(.what == "large_cat"){
     res <- c(genre  = "Music-centered",
              period = "Music-centered",
-             artiste = "Music-centered",
-             contexte = "Context-centered",
-             personne = "Context-centered",
-             evenement = "Context-centered",
+             artist = "Music-centered",
+             context = "Context-centered",
+             person = "Context-centered",
+             event = "Context-centered",
              mood = "User-centered",
              top = "User-centered",
              moment = "User-centered")[x]
@@ -13,10 +13,10 @@ recode_playlists <- function(x, .what){
   } else if(.what == "category"){
     res <- factor(x, levels = c("genre", 
                                 "period", 
-                                "artiste", 
-                                "contexte", 
-                                "personne", 
-                                "evenement", 
+                                "artist", 
+                                "context", 
+                                "person", 
+                                "event", 
                                 "mood", 
                                 "top", 
                                 "moment"),
@@ -92,9 +92,8 @@ plot_pl_annotations_bysocdem <- function(users_playlists){
 plot_typeplaylists_poisson <- function(users_playlists){
   library(modelsummary)
   mod <- list()
-  for(x in c("an_artiste", "an_contexte", "an_evenement",
-             "an_genre", "an_moment", "an_mood",
-             "an_period", "an_personne", "an_top")){
+  categories <- names(users_playlists)[str_detect(names(users_playlists), "^an_")]
+  for(x in categories){
     formula <- as.formula(str_glue("{x} ~ gender + age + isei + degree  + log(n_play_2023)"))
     mod[[x]] <- glm(formula, family = "poisson", data = users_playlists)
   }
