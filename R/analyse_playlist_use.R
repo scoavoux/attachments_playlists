@@ -72,7 +72,7 @@ plot_noplaylists_socdem <- function(users_playlists, .type = c("ridge", "boxplot
     filter(!is.na(value)) %>% 
     filter(n_playlists < 50) %>% 
     mutate(name = factor(name, levels = c("age_cat", "degree", "gender", "isei_quartile"),
-                         labels = c("Age class", "Degree", "Gender", "ISEI")))
+                         labels = c("Age class", "Degree", "Gender", "Social status\n (ISEI quartile)")))
   .type = .type[1]
   if(.type == "ridge"){
     gg <- d %>% 
@@ -97,7 +97,7 @@ plot_noplaylists_poisson <- function(users_playlists){
   library(modelsummary)
   mod_full <- glm(n_playlists ~ gender + age + isei + degree  + log(n_play_2023), family = "poisson", data = users_playlists)
   gg <- modelplot(mod_full, coef_omit = "(Intercept)", 
-            coef_rename = rev(c("Log vol. play", "Graduate education", "College education", "High school education", "ISEI", "Age in years", "Woman")))
+            coef_rename = rev(c("Log vol. play", "Graduate education", "College education", "High school education", "Social status (ISEI)", "Age in years", "Woman")))
   filename <- str_glue("output/no_playlist_poisson_reg.png")
   ggsave(filename, gg)
   return(filename)
