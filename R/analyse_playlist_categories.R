@@ -46,10 +46,11 @@ plot_pl_annotations <- function(users_playlists){
     mutate(f = value/sum(value)) %>% 
     group_by(name, cat) %>% 
     summarize(m = mean(f, na.rm=TRUE))
-  gg <- d %>%  ggplot(aes(m, name)) +
+  gg <- d %>%  ggplot(aes(m, name, fill = name)) +
      geom_col() +
      facet_wrap(~cat, nrow=3, scales = "free_y") +
-     labs(x = "Average share of playlists", y="")
+     labs(x = "Average share of playlists", y="") +
+     scale_fill_brewer(palette = "Set1")
   
   filename <- str_glue("output/playlist_annotations_desc.png")
   ggsave(filename, gg)
