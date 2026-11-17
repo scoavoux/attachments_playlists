@@ -13,25 +13,57 @@ make_survey_data <- function(){
   return(survey)
 }
 
-make_volume_play_data <- function(){
-  library(aws.s3)
-  
-  # import short streams
-  data_cloud <- arrow::open_dataset(
-    source =   arrow::s3_bucket(
-      "scoavoux",
-      endpoint_override = "minio.lab.sspcloud.fr"
-    )$path("records_w3/streams/streams_short"),
-    partitioning = arrow::schema(REGION = arrow::utf8())
-  )
-  query <- data_cloud %>% 
-    select(hashed_id, is_listened, media_type) %>% 
-    filter(media_type == "song", is_listened == 1) %>% 
-    count(hashed_id, name = "n_play_2023")
-  short_stream <- collect(query)  
-  return(short_stream)
+
+# Number of song plays per user in the "short" (2023) stream files.
+# DuckDB reads only the 3 needed columns straight from S3 and aggregates there.
+# Note: the previous arrow::open_dataset() version read the whole
+# streams_short/ folder, i.e. the 10 part- files AND the 10
+# stream_with_context_hashed_part- files. `files` lets us choose explicitly.
+make_volume_play_data <- function(files){
+  con <- duck_connect(memory_limit = "1500MB", threads = 2)
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+  sql <- sprintf("
+    SELECT hashed_id, CAST(count(*) AS INTEGER) AS n_play_2023
+    FROM read_parquet(%s)
+    WHERE media_type = 'song' AND is_listened = 1
+    GROUP BY hashed_id", sql_file_list(files))
+  tibble::as_tibble(DBI::dbGetQuery(con, sql))
 }
 
+list_volume_play_files <- function(){
+  f <- list_s3_objects("records_w3/streams/streams_short/")
+  # Only the 10 part- files (2022 - May 2023). The original arrow version read
+  # the whole folder, so n_play_2023 also counted the stream_with_context files
+  # (2023-2024 data, excluded everywhere else). See notes/code_audit.md.
+  dplyr::filter(f, 
+                stringr::str_detect(Key, "part-"),
+                !stringr::str_detect(Key, "stream_with_context"),
+                stringr::str_detect(Key, "\\.parquet$"))
+}
+
+# ISEI ------
+# make_isei_data() (below) needs an interactive Google Sheets login
+# (googlesheets4::gs4_auth) and cannot run in a non-interactive tar_make().
+# The pipeline therefore reads a frozen snapshot of the `isei` target, written
+# once to S3 with snapshot_isei_to_s3(). To update ISEI coding: run
+# make_isei_data(tar_read(users)) interactively, then snapshot_isei_to_s3(<result>).
+isei_snapshot_key <- "attachments_playlists/snapshots/isei.parquet"
+
+read_isei_snapshot <- function(){
+  con <- duck_connect()
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+  tibble::as_tibble(DBI::dbGetQuery(con, sprintf("SELECT hashed_id, isei FROM read_parquet('%s')", s3_uri(isei_snapshot_key))))
+}
+
+snapshot_isei_to_s3 <- function(isei = targets::tar_read(isei)){
+  tmp <- tempfile(fileext = ".parquet")
+  arrow::write_parquet(isei, tmp)
+  s3 <- initialize_s3()
+  s3$put_object(Bucket = "scoavoux", Key = isei_snapshot_key, Body = readBin(tmp, "raw", file.size(tmp)))
+  invisible(isei_snapshot_key)
+}
+
+# Legacy (not called by the pipeline) ------
 # this is from onmivore project.
 make_isei_data <- function(survey_raw){
   # Packages and data ------
@@ -263,134 +295,152 @@ make_isei_data <- function(survey_raw){
   return(result)
 }
 
+
 # Playlist data ------
-make_playlist_data <- function(playlist_file = "data/temp/playlists.parquet", users){
-  s3 <- initialize_s3()
-  filename <- "data/temp/playlists.parquet"
-  if(!exists(filename)){
-    s3$download_file(Bucket = "scoavoux", 
-                     Key = "/records_w3/playlists_data/RECORDS_hashed_user_playlists.parquet", 
-                     Filename = filename)
-  }
-  # import playlists
-  playlists <- read_parquet(filename, col_select = c(1, 2, 4)) %>% 
-  # and restrict to users
-    inner_join(select(users, hashed_id))
-  
-  return(playlists)
+# DuckDB reads the parquet straight from S3 (only the needed columns) and keeps
+# survey respondents. The old version used exists(filename), which tests for an
+# R object, not a file, so it re-downloaded the 285 MB file on every run.
+playlists_key <- "records_w3/playlists_data/RECORDS_hashed_user_playlists.parquet"
+
+make_playlist_data <- function(users){
+  con <- duck_connect()
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+  duckdb::duckdb_register(con, "users_ids", dplyr::distinct(dplyr::select(users, hashed_id)))
+  sql <- sprintf("
+    SELECT DISTINCT p.playlist_id, p.title, p.hashed_id
+    FROM read_parquet('%s') p
+    SEMI JOIN users_ids u ON p.hashed_id = u.hashed_id", s3_uri(playlists_key))
+  # DISTINCT: 191 playlists appear twice (same id, user and title) in the raw file
+  tibble::as_tibble(DBI::dbGetQuery(con, sql))
 }
 
-#
 make_playlists_unique_titles <- function(playlists){
   pt <- distinct(playlists, title)
   filename <- "data/temp/unique_playlists_titles.csv"
+  dir.create(dirname(filename), recursive = TRUE, showWarnings = FALSE)
   write_csv(pt, filename)
   return(filename)
 }
 
-make_tracklist_data <- function(playlist_file = "data/temp/playlists.parquet", playlists){
-  s3 <- initialize_s3()
-  filename <- "data/temp/playlists.parquet"
-  if(!exists(filename)){
-    s3$download_file(Bucket = "scoavoux", 
-                     Key = "/records_w3/playlists_data/RECORDS_hashed_user_playlists.parquet", 
-                     Filename = filename)
-  }
-  tracklist <- read_parquet(filename, col_select = c(1, 3)) %>% unnest(tracks) %>% 
-    unnest(list) %>% 
-    rename(song_id = element) %>% 
-    inner_join(select(playlists, playlist_id))
-  return(tracklist)
+# Not used downstream (kept for exploratory work).
+make_tracklist_data <- function(playlists){
+  con <- duck_connect()
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+  duckdb::duckdb_register(con, "pl", dplyr::distinct(dplyr::select(playlists, playlist_id)))
+  sql <- sprintf("
+    SELECT playlist_id, song_id FROM (
+      SELECT p.playlist_id, unnest(p.tracks.list).element AS song_id
+      FROM read_parquet('%s') p
+      SEMI JOIN pl ON p.playlist_id = pl.playlist_id)", s3_uri(playlists_key))
+  tibble::as_tibble(DBI::dbGetQuery(con, sql))
 }
 
-
+# Not used downstream (kept for exploratory work).
 make_favorites_data <- function(users){
-  s3 <- initialize_s3()
-  filename <- "data/temp/favorites.parquet"
-  s3$download_file(Bucket = "scoavoux", Key = "/records_w3/favorites/RECORDS_hashed_user_favorites.parquet", Filename = filename)
-  favorites <- read_parquet(filename) %>% 
-    inner_join(select(users, hashed_id))
-  return(favorites)
+  con <- duck_connect()
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+  duckdb::duckdb_register(con, "users_ids", dplyr::distinct(dplyr::select(users, hashed_id)))
+  sql <- sprintf("
+    SELECT f.* FROM read_parquet('%s') f
+    SEMI JOIN users_ids u ON f.hashed_id = u.hashed_id",
+    s3_uri("records_w3/favorites/RECORDS_hashed_user_favorites.parquet"))
+  tibble::as_tibble(DBI::dbGetQuery(con, sql))
 }
 
 # Stream data ------
 list_streaming_data_files <- function(){
-  require(tidyverse)
-  s3 <- initialize_s3()
-  
-  stream_data_files <- s3$list_objects_v2(Bucket = "scoavoux", Prefix = "records_w3/streams")$Content %>% map(~.x$Key) %>% 
-    unlist()
-  stream_data_files <- stream_data_files[str_detect(stream_data_files, "part-")]
+  f <- list_s3_objects("records_w3/streams/")
   # the analysis has been done before we got the 2024 data and there has been so
   # much idiosyncratic work done to clean up artists list, etc. that I really 
   # don't want to add the newer data now.
   # So... we exclude it, plain and simple.
-  stream_data_files <- stream_data_files[!str_detect(stream_data_files, "stream_with_context")]
-  return(stream_data_files)
+  # (records_w3/new_streams/ is not used either.)
+  dplyr::filter(f, 
+                stringr::str_detect(Key, "part-"),
+                !stringr::str_detect(Key, "stream_with_context"),
+                stringr::str_detect(Key, "\\.parquet$"))
 }
 
-make_stream_data_onefile <- function(file, users){
-  require(tidytable)
-  require(arrow)
-  require(lubridate)
-  
-  users <- select(users, hashed_id)
-  
-  s3 <- initialize_s3()
-  # users <- s3$get_object(Bucket = "scoavoux", Key = "records_w3/RECORDS_hashed_user_group.parquet")$Body %>% 
-  #   read_parquet()
-  if(str_detect(file, "long")){
-    streams <- s3$get_object(Bucket = "scoavoux", Key = file)$Body %>% 
-      read_parquet(col_select = c("hashed_id", "ts_listen", "song_id",
-                                  "is_listened", "click_loved", "context_4")) %>% 
-      right_join(users)
-  } else if(str_detect(file, "short")) {
-    streams <- s3$get_object(Bucket = "scoavoux", Key = file)$Body %>% 
-      read_parquet(col_select = c("hashed_id", "ts_listen", "media_id",
-                                  "is_listened", "click_loved", "context_4", 
-                                  "media_type")) %>% 
-      filter(media_type == "song") %>% 
-      rename(song_id = "media_id") %>% 
-      select(-media_type) %>% 
-      right_join(users)
-  }
-  streams <- streams %>% 
-    filter(year(as_datetime(ts_listen)) > 2017, 
-           is_listened == 1) %>% 
-    select(-is_listened)
-  
-  return(streams)
-}
-
-list_playlists_annotation_data_files <- function(){
-  s3 <- initialize_s3()
-  files <- s3$list_objects_v2(Bucket = "scoavoux", Prefix = "records_w3/playlists_annotations")$Content %>% map(~.x$Key) %>% 
-    unlist()
-  files <- files[!str_detect(files, "\\.keep")]
-  return(files)
-}
-
-make_playlists_annotation_data <- function(playlists_annotation_data_files, playlists){
-  s3 <- initialize_s3()
-  
-  r <- vector("list", length = length(playlists_annotation_data_files))
-  names(r) <- playlists_annotation_data_files
-  for(f in playlists_annotation_data_files){
-    r[[f]] <- s3$get_object(Bucket = "scoavoux", 
-                            Key = f)$Body %>% 
-      rawToChar() %>% 
-      data.table::fread() %>% 
-      tibble()
-  }
-  for(f in r){
-    if(!exists("o")) {
-      o <- f
-    } else {
-      o <- o %>% left_join(f)
+# DuckDB reads the 19 stream files straight from S3: column projection +
+# filters (survey respondents, is_listened = 1, songs only, year > 2017) are
+# pushed into the scan, and the result is written to a local directory of
+# parquet files (one per source file, ~1.3 GB in total) that the
+# like-at-first-sight queries read. Replaces the 19 `streaming_data` branches,
+# which downloaded each 1.3-1.7 GB file whole into R memory and uploaded the
+# result back to S3 (~6 GB).
+# One COPY per source file with an HTTP timeout and retries: a single query over
+# all files was seen to hang indefinitely on a stalled S3 connection.
+make_streams_users_file <- function(streaming_data_files, users,
+                                    path = "data/temp/streams_users",
+                                    max_attempts = 3){
+  unlink(path, recursive = TRUE)
+  dir.create(path, recursive = TRUE, showWarnings = FALSE)
+  keys <- streaming_data_files$Key
+  for(i in seq_along(keys)){
+    is_long <- stringr::str_detect(keys[i], "streams_long")
+    out <- file.path(path, sprintf("part_%02d.parquet", i))
+    # 1514764800 = 2018-01-01 00:00:00 UTC, i.e. year(as_datetime(ts_listen)) > 2017
+    sql <- sprintf("
+      COPY (
+        SELECT hashed_id, ts_listen, %s, click_loved, context_4
+        FROM read_parquet('%s')
+        WHERE is_listened = 1 AND ts_listen >= 1514764800 %s
+          AND hashed_id IN (SELECT hashed_id FROM u)
+      ) TO '%s' (FORMAT parquet, COMPRESSION zstd)",
+      ifelse(is_long, "song_id", "media_id AS song_id"),
+      s3_uri(keys[i]),
+      ifelse(is_long, "", "AND media_type = 'song'"),
+      out)
+    for(attempt in seq_len(max_attempts)){
+      ok <- tryCatch({
+        con <- duck_connect()
+        DBI::dbExecute(con, "SET http_timeout = 60000; SET http_retries = 5;")
+        duckdb::duckdb_register(con, "users_ids", dplyr::distinct(dplyr::select(users, hashed_id)))
+        DBI::dbExecute(con, "CREATE TEMP TABLE u AS SELECT hashed_id FROM users_ids")
+        DBI::dbExecute(con, sql)
+        TRUE
+      }, error = function(e){ message("Attempt ", attempt, " failed for ", keys[i], ": ", conditionMessage(e)); FALSE },
+      finally = try(DBI::dbDisconnect(con, shutdown = TRUE), silent = TRUE))
+      if(ok) break
+      if(attempt == max_attempts) stop("Could not extract ", keys[i])
     }
   }
-  o <- slice(o, 1, .by = "title") %>% 
-    rename_with(~paste0("an_", .x), -title)
-  playlists <- left_join(playlists, o)
-  return(playlists)
+  return(path)
+}
+
+# Playlist annotations ------
+list_playlists_annotation_data_files <- function(){
+  f <- list_s3_objects("records_w3/playlists_annotations/")
+  dplyr::filter(f, stringr::str_detect(Key, "\\.csv$"))
+}
+
+# Each annotation CSV has two columns: title and one 0/1 label (NA when the
+# annotation failed). Titles in the CSVs are whitespace-trimmed (and a title can
+# appear several times, from playlist titles that differ only by whitespace),
+# so we keep the first row per trimmed title and join on trimws(title).
+# The old version (fread + chained left_join without `by`) joined on the raw
+# title and so left every playlist whose title has leading/trailing spaces
+# unannotated (13,075 playlists).
+make_playlists_annotation_data <- function(playlists_annotation_data_files, playlists){
+  con <- duck_connect()
+  on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
+  read_one <- function(key){
+    d <- DBI::dbGetQuery(con, sprintf(
+      "SELECT * FROM read_csv('%s', header = true, all_varchar = true, nullstr = 'NA')", s3_uri(key)))
+    names(d)[1] <- "title"
+    d[[2]] <- as.integer(d[[2]])
+    d %>% 
+      tibble::as_tibble() %>% 
+      mutate(title = trimws(title)) %>% 
+      filter(!is.na(title)) %>% 
+      distinct(title, .keep_all = TRUE)
+  }
+  o <- purrr::map(playlists_annotation_data_files$Key, read_one) %>% 
+    purrr::reduce(dplyr::full_join, by = "title") %>% 
+    rename_with(~paste0("an_", .x), -title) %>% 
+    select(title, sort(setdiff(names(.), "title")))
+  playlists %>% 
+    mutate(.key = trimws(title)) %>% 
+    left_join(rename(o, .key = "title"), by = ".key") %>% 
+    select(-.key)
 }
