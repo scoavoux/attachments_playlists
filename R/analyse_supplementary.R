@@ -9,7 +9,9 @@
 # and, for comparison, with the per-user average-share metric used in
 # plot_pl_annotations() (labels of a user normalised to sum to 1, then averaged
 # over users).
-table_descriptive_stats <- function(playlists, users, users_playlists){
+# compute_descriptive_stats() returns the numbers (target desc_stats, also fed
+# to misc_numbers); write_descriptive_stats() writes the md/csv tables.
+compute_descriptive_stats <- function(playlists, users, users_playlists){
   personal <- filter_personal_playlists(playlists)
   an_cols <- names(playlists)[str_detect(names(playlists), "^an_")]
   annotated <- personal %>% filter(if_any(all_of(an_cols), ~!is.na(.x)))
@@ -24,6 +26,8 @@ table_descriptive_stats <- function(playlists, users, users_playlists){
     "  of which favourites playlists (Loved tracks / Coups de coeur)", nrow(playlists) - nrow(personal),
     "Respondents with >= 1 playlist of any kind", n_distinct(playlists$hashed_id),
     "Respondents with >= 1 personal playlist", nrow(per_user),
+    "Share of respondents with >= 1 personal playlist", nrow(per_user) / nrow(users),
+    "Share of respondents without any personal playlist", 1 - nrow(per_user) / nrow(users),
     "Personal playlists (excl. favourites)", nrow(personal),
     "Unique personal playlist titles (exact)", n_distinct(personal$title),
     "Unique personal playlist titles (trimmed, case-insensitive)", n_distinct(tolower(trimws(personal$title))),
@@ -76,12 +80,19 @@ table_descriptive_stats <- function(playlists, users, users_playlists){
     left_join(bind_rows(peruser, peruser_fam), by = "category") %>%
     mutate(family = as.character(family))
 
+  list(res = res, cats = cats, mean_labels = mean(nlabels$k),
+       n_annotated = nrow(annotated), n_personal = nrow(personal))
+}
+
+# Writes the tables of compute_descriptive_stats() (target desc_stats).
+write_descriptive_stats <- function(desc_stats){
+  res <- desc_stats$res; cats <- desc_stats$cats
   dir.create("output", showWarnings = FALSE)
   filename <- "output/supplementary_stats.md"
   knitr::kable(res, digits = 3, format = "pipe") %>% writeLines(filename)
   write_csv(res, "output/supplementary_stats.csv")
   filename2 <- "output/playlist_categories_shares.md"
-  c(str_glue("Mean number of labels per annotated playlist: {round(mean(nlabels$k), 3)}"), "",
+  c(str_glue("Mean number of labels per annotated playlist: {round(desc_stats$mean_labels, 3)}"), "",
     knitr::kable(cats, digits = 3, format = "pipe")) %>% writeLines(filename2)
   write_csv(cats, "output/playlist_categories_shares.csv")
   return(c(filename, "output/supplementary_stats.csv", filename2, "output/playlist_categories_shares.csv"))

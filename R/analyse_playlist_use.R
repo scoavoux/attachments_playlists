@@ -176,3 +176,35 @@ compare_poisson_negbin <- function(users_playlists,
 }
 
 
+
+# Who makes playlists ------
+# Numbers quoted in the "is playlisting distinctive?" part: share of
+# respondents with >= 1 personal playlist and median number of playlists among
+# playlist makers, by socio-demographic group; logit of having >= 1 playlist
+# (same covariates as the count models). Returns a tidy tibble.
+summarise_playlists_by_socdem <- function(users_playlists){
+  d <- users_playlists %>% 
+    mutate(has_playlist = as.integer(n_playlists > 0))
+  by_group <- d %>% 
+    select(hashed_id, n_playlists, has_playlist, gender, age_cat, isei_quartile, degree) %>% 
+    mutate(across(c(gender, age_cat, isei_quartile, degree), as.character)) %>% 
+    pivot_longer(c(gender, age_cat, isei_quartile, degree), names_to = "variable", values_to = "group") %>% 
+    filter(!is.na(group)) %>% 
+    group_by(variable, group) %>% 
+    summarize(n_respondents = n(),
+              share_with_playlist = mean(has_playlist),
+              median_playlists_makers = median(n_playlists[n_playlists > 0]),
+              mean_playlists_makers = mean(n_playlists[n_playlists > 0]),
+              .groups = "drop") %>% 
+    pivot_longer(-c(variable, group), names_to = "statistic") %>% 
+    mutate(term = NA_character_)
+  m <- glm(as.formula("has_playlist ~ gender + age + isei + degree + log(n_play_2023)"),
+           family = binomial, data = d)
+  cf <- summary(m)$coefficients
+  logit <- tibble(variable = "logit_has_playlist", group = NA_character_, term = rownames(cf),
+                  estimate = cf[, 1], p = cf[, 4]) %>% 
+    pivot_longer(c(estimate, p), names_to = "statistic") %>% 
+    bind_rows(tibble(variable = "logit_has_playlist", group = NA_character_, term = NA_character_,
+                     statistic = "n_obs", value = nobs(m)))
+  bind_rows(by_group, logit)
+}
