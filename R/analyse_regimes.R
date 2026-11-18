@@ -57,7 +57,9 @@
 make_playlist_membership_file <- function(playlists_raw, path = "data/temp/playlist_membership"){
   unlink(path, recursive = TRUE)
   dir.create(path, recursive = TRUE, showWarnings = FALSE)
-  con <- duck_connect(memory_limit = "1500MB", threads = 2)
+  # Filter to the respondents' playlists BEFORE unnesting the track lists, no
+  # DISTINCT (a track repeated in a playlist is rare; downstream counts distinct)
+  con <- duck_connect(memory_limit = "2GB", threads = 1)
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
   DBI::dbExecute(con, "SET http_timeout = 60000; SET http_retries = 5;")
   duckdb::duckdb_register(con, "ownpl", user_playlist_ids(playlists_raw))
@@ -65,11 +67,11 @@ make_playlist_membership_file <- function(playlists_raw, path = "data/temp/playl
     coalesce(CAST(TRY_CAST(x AS BIGINT) AS VARCHAR), CAST(x AS VARCHAR))")
   DBI::dbExecute(con, sprintf("
     COPY (
-      SELECT DISTINCT o.hashed_id, o.pid, o.is_fav, TRY_CAST(t.song_id AS BIGINT) AS song_id
-      FROM (SELECT normid(p.playlist_id) AS pid, p.hashed_id, unnest(p.tracks.list).element AS song_id
-            FROM read_parquet('%s') p) t
-      JOIN ownpl o ON t.pid = o.pid AND t.hashed_id = o.hashed_id
-      WHERE t.song_id IS NOT NULL
+      SELECT hashed_id, pid, is_fav, TRY_CAST(song_id AS BIGINT) AS song_id
+      FROM (SELECT o.hashed_id, o.pid, o.is_fav, unnest(p.tracks.list).element AS song_id
+            FROM read_parquet('%s') p
+            JOIN ownpl o ON normid(p.playlist_id) = o.pid AND p.hashed_id = o.hashed_id)
+      WHERE song_id IS NOT NULL
     ) TO '%s' (FORMAT parquet, COMPRESSION zstd)", s3_uri(playlists_key), file.path(path, "membership.parquet")))
   path
 }
