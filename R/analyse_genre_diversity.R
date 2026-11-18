@@ -27,6 +27,11 @@
 # coverage, and size-robust indices are reported (Hurlbert's PIE = probability
 # that two tracks drawn without replacement differ in genre; rarefied genre
 # richness at 10 tracks; Shannon entropy normalised by its maximum given size).
+# MAIN measure (PI, 2026-11-18): Hurlbert's PIE, i.e. the size-unbiased version
+# of 1 - HHI (penalises unbalanced genre shares, not only genre counts); reported
+# with the effective number of genres 1/HHI for readability. Short playlists are
+# mechanically homogeneous: playlists < min_tracks are excluded, and models
+# control for log(n_tracks).
 
 genre_sources <- list(
   songs_new = "records_w3/items/song.snappy.parquet",
@@ -161,6 +166,8 @@ compute_playlist_genre_diversity <- function(dir, rarefy_m = 10L){
       N = sum(n),
       shannon = { p <- n / sum(n); -sum(p * log(p)) },
       gini_simpson = 1 - sum((n / sum(n))^2),
+      # effective number of genres (Hill number of order 2 = 1 / Herfindahl-Hirschman index)
+      eff_genres = 1 / sum((n / sum(n))^2),
       # Hurlbert's PIE: unbiased with respect to playlist size
       pie = ifelse(sum(n) > 1, sum(n) / (sum(n) - 1) * (1 - sum((n / sum(n))^2)), NA_real_),
       dominant_share = max(n) / sum(n),
@@ -208,6 +215,7 @@ summarise_genre_diversity_by_type <- function(playlist_genre_diversity, playlist
                     median_shannon = median(shannon), mean_shannon = mean(shannon),
                     median_shannon_norm = median(shannon_norm, na.rm = TRUE),
                     median_gini_simpson = median(gini_simpson),
+                    median_eff_genres = median(eff_genres), mean_eff_genres = mean(eff_genres),
                     median_pie = median(pie, na.rm = TRUE), mean_pie = mean(pie, na.rm = TRUE),
                     median_dominant_share = median(dominant_share), mean_dominant_share = mean(dominant_share),
                     share_dominant_ge_80 = mean(dominant_share >= .8),
@@ -243,7 +251,7 @@ summarise_genre_diversity_by_type <- function(playlist_genre_diversity, playlist
     cf <- summary(m)$coefficients
     tibble(outcome = y, term = rownames(cf), estimate = cf[, 1], se = cf[, 2], p = cf[, 4], n_obs = nobs(m))
   }
-  models <- bind_rows(fit("pie"), fit("dominant_share"), fit("shannon_norm"), fit("rarefied_richness"))
+  models <- bind_rows(fit("pie"), fit("eff_genres"), fit("dominant_share"), fit("shannon_norm"), fit("rarefied_richness"))
 
   dir.create(dirname(filename), recursive = TRUE, showWarnings = FALSE)
   write_csv(summary, filename)
@@ -252,7 +260,7 @@ summarise_genre_diversity_by_type <- function(playlist_genre_diversity, playlist
        params = list(min_tracks = min_tracks, max_tracks = max_tracks, min_coverage = min_coverage),
        plot_data = bind_rows(mutate(long, subset = "All labelled playlists (multi-label)"),
                              mutate(filter(long, n_labels == 1), subset = "Single-label playlists")) %>%
-         select(subset, playlist_id, category, n_tracks, pie, dominant_share, shannon_norm, rarefied_richness))
+         select(subset, playlist_id, category, n_tracks, pie, eff_genres, dominant_share, shannon_norm, rarefied_richness))
 }
 
 plot_genre_diversity_by_type <- function(genre_div, filename = "output/genre_diversity_by_type.png"){

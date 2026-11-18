@@ -38,7 +38,7 @@
 stream_sources <- c("favourites", "own_playlist", "album_artist", "search",
                     "algorithmic", "editorial", "other")
 stream_source_labels <- c(favourites = "Favourites (loved tracks)", own_playlist = "Own playlists",
-                          album_artist = "Album / artist page", search = "Search",
+                          album_artist = "Library: album / artist pages, collection", search = "Search",
                           algorithmic = "Algorithmic", editorial = "Editorial playlists",
                           other = "Other / unknown")
 

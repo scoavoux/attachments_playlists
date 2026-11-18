@@ -57,11 +57,18 @@ stream_context_cols <- list(
 # rules. Own playlists and the favourites playlist are found by context_id.
 # CHECK output/context_detail_mapping.csv after the first run and adjust.
 context_source_rules <- list(
-  favourites   = "loved|favou?rite|coups?.?de.?c|my_?likes",
-  algorithmic  = "flow|mix|radio|autoplay|smart|reco|discover|similar|channel|daily|release_radar|personali|after_?track",
-  search       = "search",
-  album_artist = "album|artist|discograph|top_?tracks?",
-  editorial    = "editor|chart|selection|deezer_playlist"
+  # Values checked 2026-11-18 on the distinct values of streams$context_type
+  # (174 values; counts in notes/numbers_provenance.md §8). context_4 has
+  # priority for reco_algo / edito; own playlists and the favourites playlist
+  # are found by context_id (most own-playlist plays are context_type
+  # "playlist_page").
+  favourites   = "^loved_page$|coups?.?de.?c|my_?likes",
+  algorithmic  = "flow|mix|radio|autoplay|smart|reco|discover|similar|channel|daily|personali|livestream|blindtest",
+  search       = "search|suggest_|songcatcher",
+  # "Other library": album and artist pages, plus the user's own library pages
+  # (profile, collection, history, recently played, downloads, offline shuffle)
+  album_artist = "album|artist|discograph|top_?tracks?|profile_|collection|history|recently_played|downloads|offline|personalsong|player_default",
+  editorial    = "editor|chart|tops_|selection|deezer_playlist|partner"
 )
 # NULL: a context_id equal to one of the user's playlists counts as a play of
 # that playlist whatever the detailed context; or a regex the detailed context
