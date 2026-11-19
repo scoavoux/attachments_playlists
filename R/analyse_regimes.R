@@ -472,10 +472,10 @@ summarise_regimes <- function(user_regimes, regimes_clusters, users_playlists, p
     group_by(rule, threshold, denom, year_from, regime_from) %>% mutate(share_of_from = n_users / sum(n_users)) %>% ungroup()
   stab <- bind_rows(
     tr %>% group_by(rule, threshold, denom, is_main, year_from) %>%
-      summarize(n_users = sum(n_users), share_stable = sum(n_users[regime_from == regime_to]) / sum(n_users),
+      summarize(share_stable = sum(n_users[regime_from == regime_to]) / sum(n_users), n_users = sum(n_users),
                 .groups = "drop") %>% mutate(years = paste0(year_from, "-", year_from + 1)),
     tr %>% group_by(rule, threshold, denom, is_main) %>%
-      summarize(n_users = sum(n_users), share_stable = sum(n_users[regime_from == regime_to]) / sum(n_users),
+      summarize(share_stable = sum(n_users[regime_from == regime_to]) / sum(n_users), n_users = sum(n_users),
                 .groups = "drop") %>% mutate(years = "pooled")) %>% select(-year_from)
   # distributions of the shares (users with >= min_plays, whole window)
   dd <- user_regimes %>% filter(period == "all", n_plays >= params$min_plays, n_known > 0) %>%
