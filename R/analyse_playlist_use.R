@@ -21,18 +21,20 @@ make_users_playlists_data <- function(users, playlists, isei, volume_play){
                             "Doctorat (y compris médecine, pharmacie, dentaire), HDR")
              ),
            age = 2023-E_birth_year,
+           # right = FALSE so that the classes match their labels
+           # (the default right = TRUE put 25-year-olds in "24-", 35 in "25-34"...)
            age_cat = cut(2023-E_birth_year, 
                          breaks = c(0, 25, 35, 45, 55, 100), 
+                         right = FALSE,
                          labels = c("24-", "25-34", "35-44", "45-54", "55+")),
            isei_quartile = cut(isei, 
                                breaks = c(0, quantile(isei, seq(.25, .75, .25), na.rm=TRUE), 100),
                                labels = paste0("Q", 1:4)))
   
-  playlists <- playlists %>% 
-    filter(!(title %in% c("Loved tracks", "Loved Tracks", "Coups de cœur")))
+  playlists <- filter_personal_playlists(playlists)
   np <-  count(playlists, hashed_id, name = "n_playlists")
   ap <- playlists %>% 
-    select(-playlist_id, -title) %>% 
+    select(hashed_id, starts_with("an_")) %>% 
     pivot_longer(-hashed_id) %>% 
     filter(!is.na(value)) %>% 
     group_by(hashed_id, name) %>% 
@@ -93,14 +95,116 @@ plot_noplaylists_socdem <- function(users_playlists, .type = c("ridge", "boxplot
   
 }
 
-plot_noplaylists_poisson <- function(users_playlists){
+# Favourites playlists are automatically created by Deezer, not by the user.
+favorites_playlists_titles <- c("Loved tracks", "Loved Tracks", "Coups de cœur")
+filter_personal_playlists <- function(playlists){
+  filter(playlists, !(title %in% favorites_playlists_titles))
+}
+
+# Named (not positional) coefficient labels
+coef_labels <- c("genderWomen" = "Woman",
+                 "age" = "Age in years",
+                 "isei" = "Social status (ISEI)",
+                 "degreeHigh school" = "High school education",
+                 "degreeCollege" = "College education",
+                 "degreeGraduate" = "Graduate education",
+                 "log(n_play_2023)" = "Log vol. play")
+
+playlist_count_formula <- function(y){
+  as.formula(str_glue("{y} ~ gender + age + isei + degree + log(n_play_2023)"))
+}
+
+fit_count_model <- function(y, data, family = c("poisson", "negbin")){
+  family <- match.arg(family)
+  f <- playlist_count_formula(y)
+  if(family == "poisson"){
+    glm(f, family = "poisson", data = data)
+  } else {
+    m <- MASS::glm.nb(f, data = data)
+    m$call$formula <- f
+    m
+  }
+}
+
+plot_noplaylists_poisson <- function(users_playlists, family = c("poisson", "negbin")){
   library(modelsummary)
-  mod_full <- glm(n_playlists ~ gender + age + isei + degree  + log(n_play_2023), family = "poisson", data = users_playlists)
-  gg <- modelplot(mod_full, coef_omit = "(Intercept)", 
-            coef_rename = rev(c("Log vol. play", "Graduate education", "College education", "High school education", "Social status (ISEI)", "Age in years", "Woman")))
-  filename <- str_glue("output/no_playlist_poisson_reg.png")
+  family <- match.arg(family)
+  mod_full <- fit_count_model("n_playlists", users_playlists, family)
+  gg <- modelplot(mod_full, coef_omit = "(Intercept)", coef_map = rev(coef_labels))
+  suffix <- c(poisson = "poisson", negbin = "negbin")[family]
+  filename <- str_glue("output/no_playlist_{suffix}_reg.png")
   ggsave(filename, gg)
   return(filename)
 }
 
+# Poisson vs negative binomial, for the number of playlists and for each
+# playlist category count. Writes a model-level table (dispersion, theta, AIC,
+# LR test) and a coefficient-level table (estimates, SE, p, sign/significance
+# changes).
+compare_poisson_negbin <- function(users_playlists, 
+                                   filename = "output/poisson_vs_negbin_models.csv"){
+  outcomes <- c("n_playlists", sort(names(users_playlists)[str_detect(names(users_playlists), "^an_")]))
+  models <- list(); coefs <- list()
+  for(y in outcomes){
+    mp <- fit_count_model(y, users_playlists, "poisson")
+    mn <- fit_count_model(y, users_playlists, "negbin")
+    pearson <- sum(residuals(mp, type = "pearson")^2) / df.residual(mp)
+    lr <- 2 * (as.numeric(logLik(mn)) - as.numeric(logLik(mp)))
+    models[[y]] <- tibble(outcome = y, n_obs = nobs(mp), 
+                          mean_y = mean(mp$y), var_y = var(mp$y),
+                          poisson_pearson_dispersion = pearson,
+                          poisson_deviance_dispersion = deviance(mp) / df.residual(mp),
+                          negbin_theta = mn$theta, negbin_theta_se = mn$SE.theta,
+                          aic_poisson = AIC(mp), aic_negbin = AIC(mn),
+                          lr_stat = lr, 
+                          # boundary test: halve the chi2(1) p-value
+                          lr_p = 0.5 * pchisq(lr, df = 1, lower.tail = FALSE))
+    cp <- summary(mp)$coefficients; cn <- summary(mn)$coefficients
+    coefs[[y]] <- tibble(outcome = y, term = rownames(cp),
+                         est_poisson = cp[, 1], se_poisson = cp[, 2], p_poisson = cp[, 4],
+                         est_negbin = cn[rownames(cp), 1], se_negbin = cn[rownames(cp), 2], 
+                         p_negbin = cn[rownames(cp), 4]) %>% 
+      filter(term != "(Intercept)") %>% 
+      mutate(sig_poisson = p_poisson < .05, sig_negbin = p_negbin < .05,
+             sign_change = sign(est_poisson) != sign(est_negbin),
+             significance_change = sig_poisson != sig_negbin)
+  }
+  dir.create(dirname(filename), recursive = TRUE, showWarnings = FALSE)
+  write_csv(bind_rows(models), filename)
+  write_csv(bind_rows(coefs), str_replace(filename, "_models\\.csv$", "_coefficients.csv"))
+  return(c(filename, str_replace(filename, "_models\\.csv$", "_coefficients.csv")))
+}
 
+
+
+# Who makes playlists ------
+# Numbers quoted in the "is playlisting distinctive?" part: share of
+# respondents with >= 1 personal playlist and median number of playlists among
+# playlist makers, by socio-demographic group; logit of having >= 1 playlist
+# (same covariates as the count models). Returns a tidy tibble.
+summarise_playlists_by_socdem <- function(users_playlists){
+  d <- users_playlists %>% 
+    mutate(has_playlist = as.integer(n_playlists > 0))
+  by_group <- d %>% 
+    select(hashed_id, n_playlists, has_playlist, gender, age_cat, isei_quartile, degree) %>% 
+    mutate(across(c(gender, age_cat, isei_quartile, degree), as.character)) %>% 
+    pivot_longer(c(gender, age_cat, isei_quartile, degree), names_to = "variable", values_to = "group") %>% 
+    filter(!is.na(group)) %>% 
+    group_by(variable, group) %>% 
+    summarize(n_respondents = n(),
+              share_with_playlist = mean(has_playlist),
+              median_playlists_makers = median(n_playlists[n_playlists > 0]),
+              mean_playlists_makers = mean(n_playlists[n_playlists > 0]),
+              .groups = "drop") %>% 
+    pivot_longer(-c(variable, group), names_to = "statistic") %>% 
+    mutate(term = NA_character_)
+  m <- glm(as.formula("has_playlist ~ gender + age + isei + degree + log(n_play_2023)"),
+           family = binomial, data = d)
+  cf <- summary(m)$coefficients
+  logit <- tibble(variable = "logit_has_playlist", group = NA_character_, term = rownames(cf),
+                  estimate = cf[, 1], p = cf[, 4]) %>% 
+    pivot_longer(c(estimate, p), names_to = "statistic") %>% 
+    bind_rows(tibble(variable = "logit_has_playlist", group = NA_character_, term = NA_character_,
+                     statistic = "n_obs", value = nobs(m)))
+  bind_rows(by_group, logit)
+}

@@ -90,21 +90,21 @@ plot_pl_annotations_bysocdem <- function(users_playlists){
 }
 
 
-plot_typeplaylists_poisson <- function(users_playlists){
+plot_typeplaylists_poisson <- function(users_playlists, family = c("poisson", "negbin")){
   library(modelsummary)
+  family <- match.arg(family)
   mod <- list()
   categories <- names(users_playlists)[str_detect(names(users_playlists), "^an_")]
   for(x in categories){
-    formula <- as.formula(str_glue("{x} ~ gender + age + isei + degree  + log(n_play_2023)"))
-    mod[[x]] <- glm(formula, family = "poisson", data = users_playlists)
+    mod[[x]] <- fit_count_model(x, users_playlists, family)
   }
   names(mod) <- names(mod) %>% 
     str_remove("an_") %>% 
     recode_playlists(.what = "category") %>% 
     as.character()
-  gg <- modelplot(mod, coef_omit = "(Intercept)", 
-                  coef_rename = rev(c("Log vol. play", "Graduate education", "College education", "High school education", "ISEI", "Age in years", "Woman")))
-  filename <- str_glue("output/type_playlist_poisson_reg.png")
+  gg <- modelplot(mod, coef_omit = "(Intercept)", coef_map = rev(coef_labels))
+  suffix <- c(poisson = "poisson", negbin = "negbin")[family]
+  filename <- str_glue("output/type_playlist_{suffix}_reg.png")
   ggsave(filename, gg)
   return(filename)
 }
