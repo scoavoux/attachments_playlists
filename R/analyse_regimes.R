@@ -631,3 +631,31 @@ validate_regimes_interviews <- function(user_regimes, file, filename = "output/r
   write_csv(res, filename)
   res
 }
+
+# Regime shares by social group (main rule, fine regimes), same layout as
+# output/playlist_annotations_by_socdem.png. Writes
+# output/regimes_by_socdem.png.
+plot_regimes_bysocdem <- function(regimes_summary, filename = "output/regimes_by_socdem.png"){
+  set_ggplot_options()
+  regime_levels <- c(flow = "Flow", catalogue = "Catalogue", big_playlist = "One big playlist",
+                     distillation = "Distillation", archive_other = "Other archive", mixed = "Mixed")
+  group_levels <- c("Men", "Women", "24-", "25-34", "35-44", "45-54", "55+",
+                    "No high school", "High school", "College", "Graduate", "Q1", "Q2", "Q3", "Q4")
+  d <- regimes_summary$shares %>%
+    filter(is_main, level == "fine", variable %in% c("gender", "age_cat", "degree", "isei_quartile"),
+           regime %in% names(regime_levels)) %>%
+    mutate(regime = factor(regime_levels[regime], levels = rev(regime_levels)),
+           group = factor(group, levels = rev(intersect(group_levels, unique(group)))),
+           variable = factor(variable, levels = c("gender", "age_cat", "degree", "isei_quartile"),
+                             labels = c("Gender", "Age class", "Education", "ISEI")))
+  gg <- ggplot(d, aes(share, group, fill = regime)) +
+    geom_col() +
+    facet_grid(variable ~ ., scales = "free_y", space = "free_y") +
+    scale_x_continuous(labels = scales::percent) +
+    scale_fill_brewer(palette = "Set1", direction = -1, guide = guide_legend(reverse = TRUE)) +
+    labs(x = "Share of users", y = "", fill = "",
+         caption = "EXPLORATORY rule-based regimes (main threshold 0.4), users with >= 1,000 plays.") +
+    theme(legend.position = "bottom")
+  ggsave(filename, gg, width = 9, height = 7)
+  filename
+}

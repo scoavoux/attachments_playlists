@@ -322,6 +322,8 @@ list(
                                     repository = "local", format = "file"),
   tar_target(gg_regimes_shares,     plot_regimes_shares(user_regimes, regime_params),
                                     repository = "local", format = "file"),
+  tar_target(gg_regimes_socdem,     plot_regimes_bysocdem(regimes_summary),
+                                    repository = "local", format = "file"),
   tar_target(regimes_numbers,       misc_regimes(regimes_summary, user_regimes, regime_params),
                                     repository = "local"),
   # Validation hook (needs interviewee_map_file, see above):
