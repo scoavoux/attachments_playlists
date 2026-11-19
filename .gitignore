@@ -52,3 +52,5 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 data/temp/
+# Inputs downloaded from S3 (not for the public repo)
+data/editorial/

@@ -79,3 +79,12 @@ set_ggplot_options <- function(){
 recode_device <- function(x){
   factor(x, levels = c("organic", "edito", "reco_algo"), labels = c("Organic", "Editorial", "Algorithmic recommendation"))
 }
+
+# Download one S3 object to a local path (for small inputs that file targets
+# read locally). Returns the path, for format = "file" targets.
+fetch_s3_file <- function(key, dest, bucket = "scoavoux"){
+  dir.create(dirname(dest), recursive = TRUE, showWarnings = FALSE)
+  s3 <- initialize_s3()
+  s3$download_file(Bucket = bucket, Key = key, Filename = dest)
+  dest
+}

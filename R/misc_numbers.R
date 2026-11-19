@@ -169,7 +169,7 @@ make_misc_numbers <- function(desc_stats, ltfs_summary_file, ltfs_censoring, str
       filter(!is.na(value)) %>%
       transmute(name = str_glue("editorial_{group}_{top_coding}_{slug}_{metric}"), value,
                 description = str_glue("Editorial playlists, {group}, top coded {top_coding}: {category}, {metric}"))),
-    "editorial_shares (../editorial_annotation/csv/editorial_annotated.csv)")
+    "editorial_shares (data/editorial/editorial_annotated.csv, from S3)")
   add(editorial_misc, "editorial_misc")
 
   # Genre diversity by playlist type

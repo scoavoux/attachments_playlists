@@ -40,7 +40,7 @@ gold_sets <- list(
 classifier_models <- list(
   `gpt-5.1` = list(type = "s3_title_csv", path = "records_w3/playlists_annotations/", domain = "users"),
   `gpt-5.1 editorial` = list(type = "local_wide_csv", 
-                             path = "../editorial_annotation/csv/editorial_annotated.csv", domain = "editorial")
+                             path = "data/editorial/editorial_annotated.csv", domain = "editorial")
 )
 # Detailed play context (R/analyse_like_dynamics.R). Column names in the RAW
 # stream files are UNKNOWN (best guesses; PI to confirm): for each role, the
@@ -195,8 +195,9 @@ list(
                                     format = "file", repository = "local"),
   tar_target(gold_standards,        { gold_files; read_gold_standards(gold_files, gold_sets) }),
   # local annotation files of the models (tracked so that changes trigger a rebuild)
-  tar_target(classifier_local_files, unlist(purrr::map(Filter(function(m) m$type != "s3_title_csv", classifier_models),
-                                                       function(m) if(dir.exists(m$path)) list.files(m$path, full.names = TRUE) else m$path)),
+  tar_target(classifier_local_files, { editorial_annotated_file  # downloaded first (see below)
+                                    unlist(purrr::map(Filter(function(m) m$type != "s3_title_csv", classifier_models),
+                                                       function(m) if(dir.exists(m$path)) list.files(m$path, full.names = TRUE) else m$path)) },
                                     format = "file", repository = "local"),
   tar_target(classifier_annotations, { classifier_local_files
                                        read_model_annotations(classifier_models, playlists_annotation_data_files) }),
@@ -222,10 +223,13 @@ list(
   tar_target(gg_genre_div,          plot_genre_diversity_by_type(genre_div),
                                     repository = "local", format = "file"),
 
-  # Editorial playlists (local files, outside code/) ------
-  tar_target(editorial_raw_file,    "../data/deezer_editorial_playlists.csv",
+  # Editorial playlists (scraped public Deezer playlists; kept on S3, not in
+  # the public repo; downloaded to data/editorial/, which is gitignored) ------
+  tar_target(editorial_raw_file,    fetch_s3_file("attachments_playlists/inputs/editorial/deezer_editorial_playlists.csv",
+                                                  "data/editorial/deezer_editorial_playlists.csv"),
                                     format = "file", repository = "local"),
-  tar_target(editorial_annotated_file, "../editorial_annotation/csv/editorial_annotated.csv",
+  tar_target(editorial_annotated_file, fetch_s3_file("attachments_playlists/inputs/editorial/editorial_annotated.csv",
+                                                     "data/editorial/editorial_annotated.csv"),
                                     format = "file", repository = "local"),
   tar_target(editorial,             read_editorial_annotated(editorial_annotated_file)),
   tar_target(editorial_accounts,    count_editorial_accounts(editorial_raw_file)),
