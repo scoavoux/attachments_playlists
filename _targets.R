@@ -223,12 +223,12 @@ list(
   tar_target(gg_genre_div,          plot_genre_diversity_by_type(genre_div),
                                     repository = "local", format = "file"),
 
-  # Editorial playlists (scraped public Deezer playlists; kept on S3, not in
+  # Editorial playlists (scraped public Deezer playlists; kept on S3 in records_w3/playlists_editorial/, not in
   # the public repo; downloaded to data/editorial/, which is gitignored) ------
-  tar_target(editorial_raw_file,    fetch_s3_file("attachments_playlists/inputs/editorial/deezer_editorial_playlists.csv",
+  tar_target(editorial_raw_file,    fetch_s3_file("records_w3/playlists_editorial/deezer_editorial_playlists.csv",
                                                   "data/editorial/deezer_editorial_playlists.csv"),
                                     format = "file", repository = "local"),
-  tar_target(editorial_annotated_file, fetch_s3_file("attachments_playlists/inputs/editorial/editorial_annotated.csv",
+  tar_target(editorial_annotated_file, fetch_s3_file("records_w3/playlists_editorial/editorial_annotated.csv",
                                                      "data/editorial/editorial_annotated.csv"),
                                     format = "file", repository = "local"),
   tar_target(editorial,             read_editorial_annotated(editorial_annotated_file)),
