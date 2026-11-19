@@ -529,18 +529,10 @@ plot_regimes_shares <- function(user_regimes, params, dir = "output"){
     labs(x = "Share of plays (archive / catalogue / delegated: among plays of known family)", y = "Users",
          caption = str_glue("Users with >= {params$min_plays} plays, whole window. Dashed line: main threshold t = {params$t_main}. EXPLORATORY."))
   ggsave(f1, g1, width = 14, height = 4)
-  tern <- d %>% transmute(x = share_delegated + share_archive / 2, y = share_archive * sqrt(3) / 2)
-  tri <- tibble(x = c(0, 1, .5, 0), y = c(0, 0, sqrt(3) / 2, 0))
+  # Triangular binning in the simplex: every cell lies inside the triangle.
+  g2 <- plot_ternary_bins(d$share_archive, d$share_delegated, t = params$t_main)
   f2 <- file.path(dir, "regimes_shares_ternary.png")
-  g2 <- ggplot(tern, aes(x, y)) +
-    geom_bin_2d(binwidth = c(.025, .025)) +
-    geom_path(data = tri) +
-    annotate("text", x = c(-.03, 1.03, .5), y = c(-.03, -.03, sqrt(3) / 2 + .04),
-             label = c("Catalogue", "Delegated", "Archive")) +
-    scale_fill_viridis_c(trans = "log10") +
-    coord_equal() + theme_void() +
-    labs(fill = "Users", caption = "Ternary-style plot of the three shares (counts per bin). EXPLORATORY.")
-  ggsave(f2, g2, width = 7, height = 6.5)
+  ggsave(f2, g2, width = 7.5, height = 7)
   pr <- bind_rows(
     transmute(d, pair = "Archive vs delegated", x = share_archive, y = share_delegated),
     transmute(d, pair = "Archive vs catalogue", x = share_archive, y = share_catalogue),
@@ -658,4 +650,42 @@ plot_regimes_bysocdem <- function(regimes_summary, filename = "output/regimes_by
     theme(legend.position = "bottom")
   ggsave(filename, gg, width = 9, height = 7)
   filename
+}
+
+# Ternary plot of (archive, catalogue, delegated) shares with triangular bins
+# (n bins per side), so that no cell crosses the triangle's edges. Dashed lines:
+# share = t for each family (the regime threshold). Corners: archive at the
+# top, catalogue bottom left, delegated bottom right.
+plot_ternary_bins <- function(share_archive, share_delegated, n = 25, t = NA){
+  to_xy <- function(a, dl) list(x = dl + a / 2, y = a * sqrt(3) / 2)
+  a <- pmin(pmax(share_archive, 0), 1); dl <- pmin(pmax(share_delegated, 0), 1 - a)
+  i <- pmin(floor(a * n), n - 1); j <- pmin(floor(dl * n), n - 1 - i)
+  up <- (a * n - i) + (dl * n - j) >= 1 & (i + j) < (n - 1)
+  cells <- tibble(i, j, up) %>% count(i, j, up, name = "n_users") %>% mutate(cell = row_number())
+  poly <- cells %>% rowwise() %>%
+    reframe(cell, n_users,
+            a = if(up) c(i + 1, i, i + 1) / n else c(i, i + 1, i) / n,
+            dl = if(up) c(j, j + 1, j + 1) / n else c(j, j, j + 1) / n) %>%
+    mutate(x = to_xy(a, dl)$x, y = to_xy(a, dl)$y)
+  tri <- tibble(x = c(0, 1, .5, 0), y = c(0, 0, sqrt(3) / 2, 0))
+  thr <- NULL
+  if(!is.na(t)){
+    seg <- function(a1, d1, a2, d2) tibble(x = to_xy(a1, d1)$x, y = to_xy(a1, d1)$y,
+                                         xend = to_xy(a2, d2)$x, yend = to_xy(a2, d2)$y)
+    thr <- bind_rows(seg(t, 0, t, 1 - t),          # archive = t
+                     seg(0, t, 1 - t, t),          # delegated = t
+                     seg(0, 1 - t, 1 - t, 0))      # catalogue = t
+  }
+  ggplot() +
+    geom_polygon(data = poly, aes(x, y, group = cell, fill = n_users), colour = NA) +
+    { if(!is.null(thr)) geom_segment(data = thr, aes(x, y, xend = xend, yend = yend), linetype = 2, colour = "grey30") } +
+    geom_path(data = tri, aes(x, y)) +
+    annotate("text", x = c(0, 1, .5), y = c(-.05, -.05, sqrt(3) / 2 + .05),
+             label = c("Catalogue", "Delegated", "Archive"), size = 5) +
+    scale_fill_viridis_c(trans = "log10") +
+    coord_equal(xlim = c(-.12, 1.12), ylim = c(-.1, sqrt(3) / 2 + .1), clip = "off") +
+    theme_void() + theme(plot.margin = margin(10, 10, 10, 10)) +
+    labs(fill = "Users",
+         caption = str_glue("Each user = shares of plays by family (triangular bins, {n} per side).",
+                            "{if(is.na(t)) '' else paste0(' Dashed lines: share = ', t, '.')} EXPLORATORY."))
 }
