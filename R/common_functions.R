@@ -40,6 +40,11 @@ duck_connect <- function(memory_limit = "2GB",
                          temp_directory = "data/temp/duckdb_tmp"){
   require(DBI)
   require(duckdb)
+  # One subdirectory per connection: successive connections in the same R
+  # process must not clean up each other's spill files.
+  temp_directory <- file.path(temp_directory,
+                              paste0("c", Sys.getpid(), "_", format(Sys.time(), "%H%M%OS3"),
+                                     "_", sample.int(1e6, 1)))
   dir.create(temp_directory, recursive = TRUE, showWarnings = FALSE)
   # shared_home: cache the httpfs extension in ~/.duckdb instead of re-downloading it
   con <- dbConnect(duckdb::duckdb(shared_home = TRUE), bigint = "integer64")
