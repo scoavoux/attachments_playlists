@@ -172,18 +172,23 @@ make_misc_numbers <- function(desc_stats, ltfs_summary_file, ltfs_censoring, str
     "editorial_shares (data/editorial/editorial_annotated.csv, from S3)")
   add(editorial_misc, "editorial_misc")
 
-  # Genre diversity by playlist type
+  # Genre diversity by playlist type, one block per genre definition
+  # (genre_def: main = song-level Deezer item genre; song_only; style_tags;
+  # deezer_album_old = previous album-genre version). Names of the main
+  # definition are unchanged (genrediv_...); the others are prefixed
+  # (genrediv_<genre_def>_...).
   gs <- genre_div$summary
+  gpre <- function(gd) ifelse(gd == "main", "genrediv", paste0("genrediv_", gd))
   add(gs %>% select(-min_tracks, -max_tracks, -min_coverage) %>%
-        pivot_longer(-c(subset, category), names_to = "metric") %>%
+        pivot_longer(-c(genre_def, subset, category), names_to = "metric") %>%
         filter(!is.na(value)) %>%
-        transmute(name = str_glue("genrediv_{slugify(subset)}_{slugify(category)}_{metric}"), value,
-                  description = str_glue("Genre diversity of personal playlists ({genre_div$params$min_tracks}-{genre_div$params$max_tracks} tracks, coverage >= {genre_div$params$min_coverage}); {subset}; {category}: {metric}")),
+        transmute(name = str_glue("{gpre(genre_def)}_{slugify(subset)}_{slugify(category)}_{metric}"), value,
+                  description = str_glue("Genre diversity of personal playlists, genre definition {genre_def} ({genre_div$params$min_tracks}-{genre_div$params$max_tracks} tracks, coverage >= {genre_div$params$min_coverage}); {subset}; {category}: {metric}")),
       "genre_div$summary (output/genre_diversity_by_type.csv)")
   add(genre_div$models %>% filter(str_detect(term, "^category")) %>%
         pivot_longer(c(estimate, p), names_to = "metric") %>%
-        transmute(name = str_glue("genrediv_model_{outcome}_{slugify(term)}_{metric}"), value,
-                  description = str_glue("OLS of {outcome} on type (ref. genre) + log(n_tracks), single-label playlists: {term}, {metric}")),
+        transmute(name = str_glue("{gpre(genre_def)}_model_{outcome}_{slugify(term)}_{metric}"), value,
+                  description = str_glue("OLS of {outcome} on type (ref. genre) + log(n_tracks), single-label playlists, genre definition {genre_def}: {term}, {metric}")),
       "genre_div$models (output/genre_diversity_by_type_models.csv)")
 
   # Who makes playlists

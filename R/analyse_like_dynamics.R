@@ -33,7 +33,8 @@
 # regular expressions for algorithmic/editorial plays. The full mapping, with
 # play counts and the number of plays whose context_id matches one of the
 # user's playlists, is written to output/context_detail_mapping.csv: CHECK IT
-# before reading any result.
+# before reading any result (it also carries the three-way family used by the
+# archiving regimes, see R/analyse_regimes.R).
 
 stream_sources <- c("favourites", "own_playlist", "album_artist", "search",
                     "algorithmic", "editorial", "other")
@@ -138,10 +139,13 @@ normid_r <- function(x){
 # Context mapping ------
 # Counts plays by (context_4, context_detail), with the number of plays whose
 # context_id is one of the user's (favourites / other) playlists, then assigns
-# a base source to each pair with assign_context_sources(). Writes
-# output/context_detail_mapping.csv.
+# a base source to each pair with assign_context_sources().
+# output/context_detail_mapping.csv is now written by
+# make_context_family_mapping() (R/analyse_regimes.R), which adds the
+# three-way family (archive / catalogue / delegated / other) of each pair; it
+# is written here only if a filename is given.
 make_context_mapping <- function(streams_ctx_file, playlists_raw, rules, own_playlist_detail_pattern = NULL,
-                                 max_levels = 40L, filename = "output/context_detail_mapping.csv"){
+                                 max_levels = 40L, filename = NULL){
   con <- duck_connect(memory_limit = "1500MB", threads = 2)
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
   duckdb::duckdb_register(con, "ownpl", user_playlist_ids(playlists_raw))
@@ -158,8 +162,10 @@ make_context_mapping <- function(streams_ctx_file, playlists_raw, rules, own_pla
     LEFT JOIN ownpl o ON s.hashed_id = o.hashed_id AND s.context_id = o.pid
     GROUP BY ALL", streams_ctx_file)))
   m <- assign_context_sources(d, rules, own_playlist_detail_pattern, max_levels)
-  dir.create(dirname(filename), recursive = TRUE, showWarnings = FALSE)
-  write_csv(arrange(m, desc(n_plays)), filename)
+  if(!is.null(filename)){
+    dir.create(dirname(filename), recursive = TRUE, showWarnings = FALSE)
+    write_csv(arrange(m, desc(n_plays)), filename)
+  }
   m
 }
 

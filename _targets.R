@@ -77,19 +77,34 @@ own_playlist_detail_pattern <- NULL
 context_detail_max_levels   <- 40L   # detailed contexts kept as such in the tables, the rest lumped
 hazard_max_rank             <- 20L   # like hazard by play rank 1..20, then 21+
 # Archiving regimes (R/analyse_regimes.R): EXPLORATORY, thresholds to discuss.
+# Three-way typology (2026-11-19, agreed with the PI): shares of plays from the
+# ARCHIVE (favourites + own playlists), the CATALOGUE (self-directed: album /
+# artist pages, search, collection, profile, history, recently played, other
+# people's playlists) and DELEGATED listening (algorithmic + editorial).
 regime_params <- list(
-  t1 = 0.2,              # flow: own-library share (favourites + own playlists) of plays < t1
-  t0 = NA,               # ... or likes per 1,000 plays < t0 (NA = not used)
-  t2 = 0.7,              # big playlist: favourites share of own-playlist plays >= t2 ...
+  t_main = 0.4,          # main threshold: regime = family whose share >= t (argmax if several)
+  t_grid = c(0.3, 0.35, 0.4, 0.45, 0.5, NA), # sensitivity grid; NA = plurality (argmax, no threshold)
+  denom_main = "known",  # shares among plays of known family ("other" excluded) ...
+  denoms = c("known", "all"), # ... and, for robustness, among all plays
+  t2 = 0.7,              # archive -> big playlist: favourites share of archive plays >= t2 ...
   eff_big = 2,           # ... or effective number of playlists played < eff_big
-  eff_dist = 3,          # distillation: effective number of playlists played >= eff_dist ...
+  eff_dist = 3,          # archive -> distillation: effective number of playlists played >= eff_dist ...
   n_pl_dist = 3,         # ... and/or >= n_pl_dist own playlists with >= N plays
   dist_rule = "and",     # "and", "or", "eff" (eff_dist only), "npl" (n_pl_dist only)
   n_min_plays_pl = 20,   # N, whole window
   n_min_plays_pl_year = 10, # N, per calendar year
   min_plays = 1000,      # users with fewer plays (whole window) are "insufficient_data"
-  min_plays_year = 200,  # same, per year
+  min_plays_year = 500,  # same, per calendar year
   k = 3:5                # clusters for the data-driven check
+)
+# Three-way family of playlist-type contexts (R/analyse_regimes.R,
+# make_context_family_mapping()): regex on the detailed context marking
+# playlist-type contexts, and the context_4 values whose context_id is not
+# interpretable (no match with any respondent's or editorial playlist, checked
+# 2026-11-19): their non-matching playlist plays go to "other".
+context_family_params <- list(
+  playlist_ctx = "playlist",
+  unknown_id_context_4 = c("ext", "other", "NA")
 )
 # Hook: CSV (hashed_id, regime_qual) mapping interviewees to panel ids, if it
 # exists (unknown). Then uncomment the target regimes_interview_check.
@@ -210,7 +225,9 @@ list(
   tar_target(groundtruth_summary,   summarise_groundtruth(groundtruth_file)),
 
   # Genre diversity of playlists by type ------
-  # DuckDB: playlists -> tracks -> Deezer album genre (artist genre fallback),
+  # DuckDB: playlists -> tracks -> genre under 4 definitions (genre_def: main =
+  # song-level Deezer item genre, album then artist fallback in the same
+  # vocabulary; song_only; style_tags; deezer_album_old = previous version),
   # local parquet in data/temp/playlist_genres/
   tar_target(playlist_genre_counts_dir, make_playlist_genre_counts(playlists),
                                     format = "file", repository = "local"),
@@ -218,7 +235,8 @@ list(
   tar_target(genre_div,             summarise_genre_diversity_by_type(playlist_genre_diversity, playlists,
                                                                       min_tracks = genre_div_min_tracks,
                                                                       max_tracks = genre_div_max_tracks,
-                                                                      min_coverage = genre_div_min_coverage),
+                                                                      min_coverage = genre_div_min_coverage,
+                                                                      genre_counts_dir = playlist_genre_counts_dir),
                                     format = "rds"),
   tar_target(gg_genre_div,          plot_genre_diversity_by_type(genre_div),
                                     repository = "local", format = "file"),
@@ -253,9 +271,13 @@ list(
   tar_target(streams_ctx_file,      make_streams_ctx_file(streaming_data_files, streams_users_file, streams_schema,
                                                           stream_context_cols),
                                     format = "file", repository = "local"),
-  # (context_4, detail) -> source; also writes output/context_detail_mapping.csv (CHECK IT)
+  # (context_4, detail) -> source
   tar_target(context_mapping,       make_context_mapping(streams_ctx_file, playlists_raw, context_source_rules,
                                                          own_playlist_detail_pattern, context_detail_max_levels),
+                                    repository = "local"),
+  # + three-way family (archive / catalogue / delegated / other); writes
+  # output/context_detail_mapping.csv (CHECK IT)
+  tar_target(context_family_map,    make_context_family_mapping(context_mapping, context_family_params),
                                     repository = "local"),
 
   # Dynamics of the like: selection-artifact check (A) and sources of replays (B)
@@ -283,17 +305,22 @@ list(
   # Archiving regimes, EXPLORATORY (R/analyse_regimes.R) (C) ------
   tar_target(playlist_membership_file, make_playlist_membership_file(playlists_raw),
                                     format = "file", repository = "local"),
-  tar_target(user_play_profiles,    make_user_play_profiles(streams_ctx_file, context_mapping, playlists_raw,
-                                                            playlist_membership_file),
+  tar_target(user_play_profiles,    make_user_play_profiles(streams_ctx_file, context_family_map, playlists_raw,
+                                                            playlist_membership_file, editorial_raw_file),
                                     format = "rds", repository = "local"),
-  # user x period (whole window "all" + calendar years): features + rule-based regime
+  # realised plays per family, by context (output/context_family_plays.csv)
+  tar_target(context_family_plays,  summarise_context_family_plays(user_play_profiles), repository = "local"),
+  # user x period (whole window "all" + calendar years): features + main three-way regime
   tar_target(user_regimes,          make_user_regimes(user_play_profiles, playlists_raw, regime_params),
                                     format = "rds", repository = "local"),
   tar_target(regimes_clusters,      cluster_regimes(user_regimes, ks = regime_params$k),
                                     format = "rds", repository = "local"),
-  tar_target(regimes_summary,       summarise_regimes(user_regimes, regimes_clusters, users_playlists),
+  # shares (main t + grid), qualification, medians, transitions, distributions
+  tar_target(regimes_summary,       summarise_regimes(user_regimes, regimes_clusters, users_playlists, regime_params),
                                     format = "rds", repository = "local"),
   tar_target(gg_regimes_features,   plot_regimes_features(user_regimes),
+                                    repository = "local", format = "file"),
+  tar_target(gg_regimes_shares,     plot_regimes_shares(user_regimes, regime_params),
                                     repository = "local", format = "file"),
   tar_target(regimes_numbers,       misc_regimes(regimes_summary, user_regimes, regime_params),
                                     repository = "local"),
