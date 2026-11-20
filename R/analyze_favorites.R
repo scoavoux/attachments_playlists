@@ -217,7 +217,7 @@ plot_like_at_first_sight <- function(favorites_replayed_file,
         filter(nlisten_at_clicked_love <= 10) %>% 
         ggplot(aes(nlisten_at_clicked_love, weight = n)) +
         geom_bar() +
-        scale_y_log10(label = scales::comma, breaks = c(1, 10, 100, 1000, 10000, 100000, 1000000)) +
+#        scale_y_log10(label = scales::comma, breaks = c(1, 10, 100, 1000, 10000, 100000, 1000000)) +
         labs(x = "No. play before clicked like button", y = "") +
         scale_x_continuous(breaks = 1:10)
     } else if(!.zoomed){
