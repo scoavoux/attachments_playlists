@@ -35,7 +35,8 @@ make_misc_numbers <- function(desc_stats, ltfs_summary_file, ltfs_censoring, str
                               classifier_diagnostics_legacy,
                               groundtruth_summary, editorial_shares, editorial_accounts, editorial_misc,
                               genre_div, playlists_socdem,
-                              like_dynamics_numbers = NULL, regimes_numbers = NULL){
+                              like_dynamics_numbers = NULL, regimes_numbers = NULL,
+                              sorting_numbers = NULL){
   out <- list()
   add <- function(df, source) out[[length(out) + 1]] <<-
     mutate(df, name = as.character(name), value = as.numeric(value), description = as.character(description),
@@ -203,6 +204,9 @@ make_misc_numbers <- function(desc_stats, ltfs_summary_file, ltfs_censoring, str
   # Archiving regimes, EXPLORATORY (R/analyse_regimes.R)
   if(!is.null(regimes_numbers))
     add(regimes_numbers, "regimes_numbers (user_regimes, regimes_summary; EXPLORATORY)")
+  # Inscription (sorting) regimes, EXPLORATORY (R/analyse_sorting.R)
+  if(!is.null(sorting_numbers))
+    add(sorting_numbers, "sorting_numbers (user_sorting, sorting_mixture, sorting_summary; EXPLORATORY)")
 
   res <- bind_rows(out)
   dups <- res$name[duplicated(res$name)]

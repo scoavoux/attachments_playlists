@@ -106,6 +106,28 @@ context_family_params <- list(
   playlist_ctx = "playlist",
   unknown_id_context_4 = c("ext", "other", "NA")
 )
+# Inscription (sorting) regimes (R/analyse_sorting.R): EXPLORATORY. Second
+# typology next to the play-based regimes: Gaussian mixture (mclust) on what
+# users inscribe (log counts) and how they split it into lists; renewal is a
+# second axis, not in the mixture. Scope = users classified by the regimes.
+sorting_params <- list(
+  features = c("log_n_liked_songs", "log_n_saved_albums", "log_n_saved_artists", "log_n_followed_playlists",
+               "log_n_own_playlists", "log_n_tracks_own_pl", "log_n_pl_ge_min",
+               "share_largest_list", "log_eff_n_lists", "share_liked_in_own_pl"),
+  G = 1:9,               # numbers of components tried (BIC)
+  G_profiles = 3:7,      # other solutions also fitted and profiled (besides the BIC-best)
+  model_names = NULL,    # mclust covariance models (NULL = all)
+  prior = TRUE,          # conjugate prior (mclust::priorControl) against degenerate components
+  hc_subset = 2000,      # users in the hierarchical initialisation
+  n_boot = 20,           # stability: refits on subsamples
+  boot_frac = 0.8,
+  seed = 20261120,
+  min_tracks_list = 10,  # own playlists "of substance": >= this many tracks
+  first_activation_year = 2019, # playlist activations counted from this year on (2018 = left-censored)
+  recent_from_year = 2022,      # own playlist "still played" if played in this year or later
+  renewal_like_months = 0.5,    # renewal "active": share of active months with >= 1 like >= this ...
+  renewal_new_pl = 1            # ... or >= this many new playlists per active year
+)
 # Hook: CSV (hashed_id, regime_qual) mapping interviewees to panel ids, if it
 # exists (unknown). Then uncomment the target regimes_interview_check.
 interviewee_map_file <- NULL
@@ -331,6 +353,24 @@ list(
   # tar_target(regimes_interview_check, validate_regimes_interviews(user_regimes, interviewee_map),
   #                                   repository = "local"),
 
+  # Inscription (sorting) regimes, EXPLORATORY (R/analyse_sorting.R) ------
+  tar_target(sorting_snapshot,      make_sorting_snapshot(user_regimes, playlists_raw, playlist_membership_file,
+                                                          sorting_params),
+                                    format = "rds", repository = "local"),
+  tar_target(monthly_like_activity, make_monthly_like_activity(streams_users_file), repository = "local"),
+  tar_target(user_sorting,          make_user_sorting(sorting_snapshot, monthly_like_activity, user_play_profiles,
+                                                      user_regimes, sorting_params),
+                                    format = "rds", repository = "local"),
+  tar_target(sorting_mixture,       fit_sorting_mixture(user_sorting, sorting_params),
+                                    format = "rds", repository = "local"),
+  tar_target(sorting_summary,       summarise_sorting(user_sorting, sorting_mixture, users_playlists, sorting_params),
+                                    format = "rds", repository = "local"),
+  tar_target(gg_sorting_profiles,   plot_sorting_profiles(sorting_summary),
+                                    repository = "local", format = "file"),
+  tar_target(gg_sorting_x_regimes,  plot_sorting_x_regimes(sorting_summary),
+                                    repository = "local", format = "file"),
+  tar_target(sorting_numbers,       misc_sorting(sorting_summary, sorting_params), repository = "local"),
+
   # Every number quoted in the papers/slides (notes/numbers_provenance.md) ------
   tar_target(misc_numbers,          make_misc_numbers(
                                       desc_stats = desc_stats,
@@ -348,7 +388,8 @@ list(
                                       genre_div = genre_div,
                                       playlists_socdem = playlists_socdem,
                                       like_dynamics_numbers = like_dynamics_numbers,
-                                      regimes_numbers = regimes_numbers)),
+                                      regimes_numbers = regimes_numbers,
+                                      sorting_numbers = sorting_numbers)),
   tar_target(misc_numbers_csv,      write_misc_numbers(misc_numbers),
                                     repository = "local", format = "file")
 
