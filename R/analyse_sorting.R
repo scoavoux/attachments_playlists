@@ -130,22 +130,35 @@ sorting_scope_ids <- function(user_regimes){
 
 # Monthly like activity (logs) ------
 # One row per user x month with >= 1 play: plays and distinct songs liked.
-# Aggregates in DuckDB over the local extract of the respondents' plays.
-make_monthly_like_activity <- function(streams_users_file, user_subset = NULL){
+# Aggregates in DuckDB over the local extract of the respondents' plays, in
+# n_buckets passes over users (hash of hashed_id) to keep memory and spill
+# small. Plays and likes are aggregated separately: the distinct count only
+# runs on the (few) plays with click_loved = 1. (First version, one pass with
+# count(DISTINCT) FILTER over all plays, ran out of temp space on the server.)
+make_monthly_like_activity <- function(streams_users_file, user_subset = NULL, n_buckets = 16){
   con <- duck_connect(memory_limit = "2GB", threads = 2)
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
   sub <- ""
   if(!is.null(user_subset)){
     duckdb::duckdb_register(con, "user_subset", tibble::tibble(hashed_id = user_subset))
-    sub <- "WHERE hashed_id IN (SELECT hashed_id FROM user_subset)"
+    sub <- "AND hashed_id IN (SELECT hashed_id FROM user_subset)"
   }
-  tibble::as_tibble(DBI::dbGetQuery(con, sprintf("
-    SELECT hashed_id,
-      CAST(strftime(make_timestamp(CAST(ts_listen AS BIGINT) * 1000000), '%%Y-%%m') AS VARCHAR) AS month,
-      CAST(count(*) AS DOUBLE) AS n_plays,
-      CAST(count(DISTINCT song_id) FILTER (WHERE click_loved = 1) AS DOUBLE) AS n_liked_songs
-    FROM read_parquet('%s/*.parquet') %s
-    GROUP BY ALL", streams_users_file, sub)))
+  month <- "CAST(strftime(make_timestamp(CAST(ts_listen AS BIGINT) * 1000000), '%Y-%m') AS VARCHAR)"
+  src <- sprintf("read_parquet('%s/*.parquet')", streams_users_file)
+  out <- vector("list", n_buckets)
+  for(b in seq_len(n_buckets) - 1){
+    w <- sprintf("WHERE hash(hashed_id) %% %d = %d %s", n_buckets, b, sub)
+    out[[b + 1]] <- tibble::as_tibble(DBI::dbGetQuery(con, sprintf("
+      WITH p AS (SELECT hashed_id, %1$s AS month, CAST(count(*) AS DOUBLE) AS n_plays
+                 FROM %2$s %3$s GROUP BY ALL),
+      l AS (SELECT hashed_id, month, CAST(count(*) AS DOUBLE) AS n_liked_songs
+            FROM (SELECT DISTINCT hashed_id, %1$s AS month, song_id
+                  FROM %2$s %3$s AND click_loved = 1)
+            GROUP BY ALL)
+      SELECT p.hashed_id, p.month, p.n_plays, coalesce(l.n_liked_songs, 0) AS n_liked_songs
+      FROM p LEFT JOIN l USING (hashed_id, month)", month, src, w)))
+  }
+  bind_rows(out)
 }
 
 # Renewal features (second axis) ------
