@@ -54,8 +54,15 @@
 # One row per user in scope; reads the favourites file on S3 (respondents in
 # scope only) and the local membership parquet (R/analyse_regimes.R).
 make_sorting_snapshot <- function(user_regimes, playlists_raw, playlist_membership_file, params,
-                                  favorites_key = "records_w3/favorites/RECORDS_hashed_user_favorites.parquet"){
+                                  favorites_key = "records_w3/favorites/RECORDS_hashed_user_favorites.parquet",
+                                  n_buckets = 16){
   ids <- sorting_scope_ids(user_regimes)
+  # Light on memory and spill (the one-pass version ran out of temp space on
+  # the server): (1) the respondents' favourites are streamed once from S3 to
+  # a local parquet (COPY, no table in memory); (2) all aggregates run in
+  # n_buckets passes over users (hash of hashed_id), reading both parquets
+  # directly, without temp tables.
+  fav_path <- "data/temp/sorting_favorites.parquet"
   con <- duck_connect(memory_limit = "2GB", threads = 2)
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE))
   DBI::dbExecute(con, "SET http_timeout = 60000; SET http_retries = 5;")
@@ -63,43 +70,53 @@ make_sorting_snapshot <- function(user_regimes, playlists_raw, playlist_membersh
   DBI::dbExecute(con, "CREATE TEMP TABLE ids AS SELECT DISTINCT hashed_id FROM ids_r")
   duckdb::duckdb_register(con, "ownpl_r", user_playlist_ids(playlists_raw))
   DBI::dbExecute(con, "CREATE TEMP TABLE ownpl AS SELECT o.* FROM ownpl_r o SEMI JOIN ids USING (hashed_id)")
+  unlink(fav_path)
   DBI::dbExecute(con, sprintf("
-    CREATE TEMP TABLE fav AS
-    SELECT f.hashed_id, f.item_type, CAST(f.item_id AS VARCHAR) AS item_id
-    FROM read_parquet('%s') f SEMI JOIN ids USING (hashed_id)
-    WHERE f.item_type IN ('song', 'album', 'artist', 'playlist')", s3_uri(favorites_key)))
-  DBI::dbExecute(con, sprintf("
-    CREATE TEMP TABLE m AS
-    SELECT m.hashed_id, m.pid, m.is_fav, m.song_id
-    FROM read_parquet('%s/*.parquet') m SEMI JOIN ids USING (hashed_id)", playlist_membership_file))
+    COPY (SELECT f.hashed_id, f.item_type, CAST(f.item_id AS VARCHAR) AS item_id
+          FROM read_parquet('%s') f
+          WHERE f.item_type IN ('song', 'album', 'artist', 'playlist')
+            AND f.hashed_id IN (SELECT hashed_id FROM ids))
+    TO '%s' (FORMAT parquet, COMPRESSION zstd)", s3_uri(favorites_key), fav_path))
   q <- function(sql) tibble::as_tibble(DBI::dbGetQuery(con, sql))
-  fav_counts <- q("
-    SELECT f.hashed_id,
-      CAST(count(DISTINCT item_id) FILTER (WHERE item_type = 'song') AS DOUBLE) AS n_liked_songs,
-      CAST(count(DISTINCT item_id) FILTER (WHERE item_type = 'album') AS DOUBLE) AS n_saved_albums,
-      CAST(count(DISTINCT item_id) FILTER (WHERE item_type = 'artist') AS DOUBLE) AS n_saved_artists,
-      CAST(count(DISTINCT item_id) FILTER (WHERE item_type = 'playlist' AND o.pid IS NULL) AS DOUBLE) AS n_followed_playlists,
-      CAST(count(DISTINCT item_id) FILTER (WHERE item_type = 'playlist' AND o.pid IS NOT NULL) AS DOUBLE) AS n_fav_own_playlists
-    FROM fav f LEFT JOIN ownpl o ON f.hashed_id = o.hashed_id AND f.item_id = o.pid
-    GROUP BY f.hashed_id")
-  # sizes of own playlists (excl. the loved-tracks playlist), one row per playlist
-  own_sizes <- q("
-    SELECT hashed_id, pid, CAST(count(DISTINCT song_id) AS DOUBLE) AS n_tracks
-    FROM m WHERE NOT is_fav GROUP BY hashed_id, pid")
-  # union of liked songs and own-playlist tracks; redistribution
-  arch <- q("
-    WITH fs AS (SELECT DISTINCT hashed_id, TRY_CAST(item_id AS BIGINT) AS song_id FROM fav WHERE item_type = 'song'),
-    os AS (SELECT DISTINCT hashed_id, song_id FROM m WHERE NOT is_fav),
-    u AS (SELECT hashed_id, song_id, bool_or(src = 'f') AS in_f, bool_or(src = 'o') AS in_o
-          FROM (SELECT *, 'f' AS src FROM fs UNION ALL SELECT *, 'o' AS src FROM os) GROUP BY hashed_id, song_id)
-    SELECT hashed_id, CAST(count(*) AS DOUBLE) AS n_archive_tracks,
-      CAST(count(*) FILTER (WHERE in_o) AS DOUBLE) AS n_tracks_own_pl,
-      CAST(count(*) FILTER (WHERE in_f AND in_o) AS DOUBLE) AS n_liked_in_own_pl
-    FROM u GROUP BY hashed_id")
-  # diagnostic: size of the loved-tracks playlist in the playlists file (should
-  # track the number of liked songs in the favourites file)
-  fav_pl <- q("SELECT hashed_id, CAST(count(DISTINCT song_id) AS DOUBLE) AS n_fav_pl_tracks
-               FROM m WHERE is_fav GROUP BY hashed_id")
+  run_bucket <- function(b){
+    w <- sprintf("hash(hashed_id) %% %d = %d", n_buckets, b)
+    fav <- sprintf("(SELECT * FROM read_parquet('%s') WHERE %s)", fav_path, w)
+    m <- sprintf("(SELECT hashed_id, pid, is_fav, song_id FROM read_parquet('%s/*.parquet')
+                   WHERE %s AND hashed_id IN (SELECT hashed_id FROM ids))", playlist_membership_file, w)
+    list(
+      fav_counts = q(sprintf("
+        SELECT f.hashed_id,
+          CAST(count(DISTINCT item_id) FILTER (WHERE item_type = 'song') AS DOUBLE) AS n_liked_songs,
+          CAST(count(DISTINCT item_id) FILTER (WHERE item_type = 'album') AS DOUBLE) AS n_saved_albums,
+          CAST(count(DISTINCT item_id) FILTER (WHERE item_type = 'artist') AS DOUBLE) AS n_saved_artists,
+          CAST(count(DISTINCT item_id) FILTER (WHERE item_type = 'playlist' AND o.pid IS NULL) AS DOUBLE) AS n_followed_playlists,
+          CAST(count(DISTINCT item_id) FILTER (WHERE item_type = 'playlist' AND o.pid IS NOT NULL) AS DOUBLE) AS n_fav_own_playlists
+        FROM %s f LEFT JOIN ownpl o ON f.hashed_id = o.hashed_id AND f.item_id = o.pid
+        GROUP BY f.hashed_id", fav)),
+      # sizes of own playlists (excl. the loved-tracks playlist), one row per playlist
+      own_sizes = q(sprintf("
+        SELECT hashed_id, pid, CAST(count(DISTINCT song_id) AS DOUBLE) AS n_tracks
+        FROM %s WHERE NOT is_fav GROUP BY hashed_id, pid", m)),
+      # union of liked songs and own-playlist tracks; redistribution
+      arch = q(sprintf("
+        WITH fs AS (SELECT DISTINCT hashed_id, TRY_CAST(item_id AS BIGINT) AS song_id FROM %1$s WHERE item_type = 'song'),
+        os AS (SELECT DISTINCT hashed_id, song_id FROM %2$s WHERE NOT is_fav),
+        u AS (SELECT hashed_id, song_id, bool_or(src = 'f') AS in_f, bool_or(src = 'o') AS in_o
+              FROM (SELECT *, 'f' AS src FROM fs UNION ALL SELECT *, 'o' AS src FROM os) GROUP BY hashed_id, song_id)
+        SELECT hashed_id, CAST(count(*) AS DOUBLE) AS n_archive_tracks,
+          CAST(count(*) FILTER (WHERE in_o) AS DOUBLE) AS n_tracks_own_pl,
+          CAST(count(*) FILTER (WHERE in_f AND in_o) AS DOUBLE) AS n_liked_in_own_pl
+        FROM u GROUP BY hashed_id", fav, m)),
+      # diagnostic: size of the loved-tracks playlist in the playlists file
+      # (should track the number of liked songs in the favourites file)
+      fav_pl = q(sprintf("SELECT hashed_id, CAST(count(DISTINCT song_id) AS DOUBLE) AS n_fav_pl_tracks
+                          FROM %s WHERE is_fav GROUP BY hashed_id", m)))
+  }
+  res <- lapply(seq_len(n_buckets) - 1, run_bucket)
+  fav_counts <- bind_rows(purrr::map(res, "fav_counts"))
+  own_sizes <- bind_rows(purrr::map(res, "own_sizes"))
+  arch <- bind_rows(purrr::map(res, "arch"))
+  fav_pl <- bind_rows(purrr::map(res, "fav_pl"))
   n_own <- playlists_raw %>% filter(!(title %in% favorites_playlists_titles), hashed_id %in% ids) %>%
     distinct(hashed_id, playlist_id) %>% dplyr::count(hashed_id, name = "n_own_playlists")
   struct <- own_sizes %>% group_by(hashed_id) %>%
